@@ -1,0 +1,23 @@
+{
+    "name": "jaytaph/phpile",
+    "description": "PHP 7.0 Transpiler",
+
+    "license": "BSD-3",
+    "authors": [{
+        "name": "Joshua Thijssen",
+        "email": "jthijssen@noxlogic.nl"
+    }],
+
+    "autoload": {
+        "psr-4": {"PHPile\\": "lib/PHPile"}
+    },
+
+    "require": {
+        "nikic/php-parser": "^2.0",
+        "symfony/console": "^2.8",
+        "symfony/finder": "^2.8"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.1"
+    }
+}
