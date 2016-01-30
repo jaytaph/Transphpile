@@ -47,14 +47,31 @@ class ReturnVisitor extends NodeVisitorAbstract
         );
 
         // Generate remainder code
-        $code = sprintf(
-            '<?php '."\n".
-            '  if (! is_%s('.$retVar.')) { '."\n".
-            '    throw new \InvalidArgumentException("Argument returned must be of the type %s, ".get_class('.$retVar.')." given"); '."\n".
-            '  } '."\n".
-            '  return '.$retVar.'; ',
-            $functionNode->returnType, $functionNode->returnType
-        );
+
+        // @TODO: It might be easier to read whenwe generate ALL code directly from Nodes instead of generating it
+
+        if (in_array($functionNode->returnType, array('string', 'bool', 'int', 'float'))) {
+            // Scalars are treated a bit different
+            $code = sprintf(
+                '<?php '."\n".
+                '  if (! is_%s($'.$retVar.')) { '."\n".
+                '    throw new \InvalidArgumentException("Argument returned must be of the type %s, ".get_class($'.$retVar.')." given"); '."\n".
+                '  } '."\n".
+                '  return $'.$retVar.'; ',
+                $functionNode->returnType, $functionNode->returnType
+            );
+        } else {
+            // Otherwise use is_a for check against classes
+            $code = sprintf(
+                '<?php '."\n".
+                '  if (! is_a($'.$retVar.', "%s")) { '."\n".
+                '    throw new \InvalidArgumentException("Argument returned must be of the type %s, ".get_class($'.$retVar.')." given"); '."\n".
+                '  } '."\n".
+                '  return $'.$retVar.'; ',
+                $functionNode->returnType, $functionNode->returnType
+            );
+        }
+
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         $stmts = $parser->parse($code);
 

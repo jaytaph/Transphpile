@@ -1,10 +1,6 @@
-#@IgnoreInspection BashAddShebang
 Generic:
 
 [ ] Phar
 [ ] Self-update
 
 PHP7:
-
-[X] Coalesce
-[X] Spaceship

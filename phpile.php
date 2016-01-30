@@ -10,6 +10,8 @@ const PHPILE_SEMVER = '0.0.1';
 // @TODO: Get rid of this
 $functionStack = array();
 $is_strict = false;
+$anonClasses = array();
+$currentClass = null;
 
 $app = new Application("PHPile", PHPILE_SEMVER);
 $app->add(new PHPile\Command\Transpile());

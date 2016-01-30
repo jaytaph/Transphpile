@@ -23,13 +23,11 @@ class DeclareVisitor extends NodeVisitorAbstract
                 continue;
             }
 
-            // strict_types should only use 0 or 1, but check for LNumber to be safe
-            if ($declare->value instanceof Node\Scalar\LNumber) {
-                global $is_strict;
-                $is_strict = ($declare->value->value == 1);
-            }
+            // Set global strict value so others know what to do with scalar typehinting and return types.
+            global $is_strict;
+            $is_strict = ($declare->value->value == 1);
 
-            // Remove strict_type declares
+            // Remove the strict_type declare
             return NodeTraverser::REMOVE_NODE;
         }
 
