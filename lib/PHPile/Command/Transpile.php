@@ -22,9 +22,6 @@ class Transpile extends Command
     /** @var bool Should do inplace changes */
     protected $inplace = false;
 
-    /** @var string Target version of PHP to transpile to */
-    protected $target;
-
     /** @var bool Should output be done directly to stdout */
     protected $stdout = false;
 
@@ -36,10 +33,9 @@ class Transpile extends Command
 
             ->addArgument('source', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Array of files to transpile')
 
-            ->addOption('target', 't', InputOption::VALUE_REQUIRED, 'Set PHP target version to transpile to (defaults to 53)', '53')
             ->addOption('no-recursion', '', InputOption::VALUE_NONE, 'Do not recursively seek directories')
             ->addOption('inplace', '', InputOption::VALUE_NONE, 'Do an in-place compilation (destroys source files!)')
-            ->addOption('dest', 'd', InputOption::VALUE_REQUIRED, 'Compile files into this directory (defaults to ".")')
+            ->addOption('dest', 'd', InputOption::VALUE_REQUIRED, 'Compile files into this directory (defaults to "./php53")')
             ->addOption('stdout', '', InputOPtion::VALUE_NONE, 'Output to stdout instead of file')
         ;
     }
@@ -52,12 +48,6 @@ class Transpile extends Command
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        // Check target
-        $this->target = $this->getIo()->getOption('target');
-        if (!in_array($this->target, array('53', '54', '55', '56'))) {
-            throw new InvalidOptionException(sprintf('Target must be either 53, 54, 55 or 56'));
-        }
-
         // Check inplace and dest mutual exclusivity
         if ($this->getIo()->getOption('inplace') && $this->getIo()->getOption('dest')) {
             throw new InvalidOptionException(sprintf('Using both --dest and --inplace does not make sense.'));
@@ -71,10 +61,13 @@ class Transpile extends Command
         // Check destination and set to '.' as default
         $this->destination = $this->getIo()->getOption('dest');
         if (!$this->destination) {
-            $this->destination = '.';
+            $this->destination = './php53';
         }
         if (!is_dir($this->destination) || !is_writeable($this->destination)) {
-            throw new InvalidOptionException(sprintf('Destination directory "%s" does not exist or is not writable', $this->destination));
+            @mkdir($this->destination);
+            if (!is_dir($this->destination) || !is_writeable($this->destination)) {
+                throw new InvalidOptionException(sprintf('Destination directory "%s" does not exist or is not writable or could not be created.', $this->destination));
+            }
         }
 
         // Find sources
@@ -86,18 +79,23 @@ class Transpile extends Command
         }
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getIo()->output('Starting', 'main');
+        $this->getIo()->verbose('Starting', 'main');
 
         $transpiler = new \PHPile\Transpile\Transpile($this->getIo());
         foreach ($this->sources as $source) {
-            $dest = $this->generateDestination($source);
+            $destination = $this->generateDestination($source);
 
-            $transpiler->transpile($source, $dest, $this->target);
+            $this->getIo()->verbose('Transpiling <comment>'.$source.'</comment> to <comment>'.$destination.'</comment>', 'trns');
+            $transpiler->transpile($source, $destination);
         }
 
-        $this->getIo()->output('All done', 'main');
+        $this->getIo()->verbose('All done', 'main');
     }
 
     /**
@@ -107,10 +105,17 @@ class Transpile extends Command
      */
     protected function generateDestination($source)
     {
+        // Inplace means the destination is the same as the source
         if ($this->inplace) {
             return $source;
         }
 
+        // When using stdout, use the '-' to reflect this
+        if ($this->getIo()->getOption('stdout')) {
+            return '-';
+        }
+
+        // Otherwise, use the destination path and the source
         return $this->destination.'/'.$source;
     }
 }

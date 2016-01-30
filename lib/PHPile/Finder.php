@@ -34,7 +34,7 @@ class Finder
 
         foreach ($this->getIO()->getArgument('source') as $source) {
             if (is_dir($source) && is_readable($source)) {
-                $this->getIO()->verbose(sprintf("Adding directory %s<info>$source</info>", $this->getIO()->getOption('no-recursion') ? 'recursively ' : ''), 'find');
+                $this->getIO()->veryVerbose(sprintf("Adding directory %s<info>$source</info>", $this->getIO()->getOption('no-recursion') ? 'recursively ' : ''), 'find');
                 $dirFinder = SymfonyFinder::create()
                     ->in($source)
                     ->files()
@@ -47,7 +47,7 @@ class Finder
 
                 $it = $dirFinder;
             } elseif (is_file($source) && is_readable($source)) {
-                $this->getIO()->verbose("Adding file <info>$source</info>", 'find');
+                $this->getIO()->veryVerbose("Adding file <info>$source</info>", 'find');
                 $it = array($source);
             } else {
                 $e = new FinderException();

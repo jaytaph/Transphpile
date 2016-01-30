@@ -6,28 +6,39 @@ use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
 
+/*
+ * Check if returned values are correctly typed if source is set to strict
+ */
+
 class ReturnVisitor extends NodeVisitorAbstract
 {
     public function leaveNode(Node $node)
     {
         if (!$node instanceof Node\Stmt\Return_) {
-            return;
+            return null;
         }
 
         global $functionStack;
         if (count($functionStack) == 0) {
-            // return in global scope
-            return;
+            // encountered a return in global scope
+            return null;
         }
-        $functionNode = $functionStack[count($functionStack) - 1];
 
+        // Check return type of current function
+        $functionNode = $functionStack[count($functionStack) - 1];
         if ($functionNode->returnType == null) {
-            return;
+            return null;
+        }
+
+        // Not strict, so no need to check return type;
+        global $is_strict;
+        if (! $is_strict) {
+            return null;
         }
 
         // Define uniq retvar for returning, most likely not needed but done to make sure we don't
         // hit any existing variables or multiple return vars
-        $retVar = '$ret'.uniqid(true);
+        $retVar = 'ret'.uniqid(true);
 
         // Generate code for "$retVar = <originalExpression>"
         $retNode = new Node\Expr\Assign(

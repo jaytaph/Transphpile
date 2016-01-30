@@ -2,7 +2,6 @@
 
 namespace PHPile\Transpile;
 
-use PHPile\AnsiHighlight;
 use PHPile\IO\IOInterface;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
@@ -17,7 +16,7 @@ class Transpile
         $this->setIO($io);
     }
 
-    public function transpile($srcPath, $dstPath, $target)
+    public function transpile($srcPath, $dstPath)
     {
         $inplace = false;
         if ($srcPath == $dstPath) {
@@ -29,6 +28,11 @@ class Transpile
         // transpile based on target version
         $code = file_get_contents($srcPath);
 
+//        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+//        $stmts = $parser->parse('<?php @$a;');
+//        print_r($stmts);
+//        exit(1);
+
         // Parse into statements
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         $stmts = $parser->parse($code);
@@ -37,20 +41,29 @@ class Transpile
         $traverser = $this->getTraverser();
         $stmts = $traverser->traverse($stmts);
 
-        echo "Old output:\n============================================\n";
-        $ah = new AnsiHighlight();
-        echo $ah->highlight($code);
-        echo "\n============================================\n";
-        echo "New output:\n============================================\n";
+//        echo "Old output:\n============================================\n";
+//        $ah = new AnsiHighlight();
+//        echo $ah->highlight($code);
+//        echo "\n============================================\n";
+//        echo "New output:\n============================================\n";
+//        $ah = new AnsiHighlight();
+//        echo $ah->highlight("<?php\n\n".$prettyPrinter->prettyPrint($stmts));
+
         $prettyPrinter = new Standard();
-        $ah = new AnsiHighlight();
-        echo $ah->highlight("<?php\n\n".$prettyPrinter->prettyPrint($stmts));
 
-        echo "\n============================================\n";
+        if ($dstPath == '-') {
+            // Output directly to stdout
+            $this->getIo()->output("<?php \n". $prettyPrinter->prettyPrint($stmts));
+        } else {
+            file_put_contents($dstPath, "<?php \n".$prettyPrinter->prettyPrint($stmts));
+        }
 
+        // If inplace, we have to (atomically) rename (temp) dest to source
         if ($inplace) {
             rename($dstPath, $srcPath);
         }
+
+
     }
 
     /**

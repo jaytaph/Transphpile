@@ -6,6 +6,11 @@ use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
 
+/*
+ * Keeps track in which function we currently reside, which typehint it returns and will add
+ * checks on parameters when in strict mode.
+ */
+
 class FunctionVisitor extends NodeVisitorAbstract
 {
     /**
@@ -52,15 +57,20 @@ class FunctionVisitor extends NodeVisitorAbstract
 
         // Add code for checking scalar types
         foreach ($params as $param) {
-            $code = sprintf(
-                    '<?php if (! is_%s($%s)) { throw new \InvalidArgumentException("Argument $%s passed to %s() must be of the type %s, ".get_class($%s)." given"); }',
-                    $param['type'], $param['arg'], $param['arg'], $param['func'], $param['type'], $param['arg']
-            );
+            global $is_strict;
 
-            $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
-            $stmts = $parser->parse($code);
+            if ($is_strict) {
+                $code = sprintf(
+                        '<?php if (! is_%s($%s)) { throw new \InvalidArgumentException("Argument $%s passed to %s() must be of the type %s, ".get_class($%s)." given"); }',
+                        $param['type'], $param['arg'], $param['arg'], $param['func'], $param['type'], $param['arg']
+                );
 
-            $node->stmts = array_merge($stmts, $node->stmts);
+                $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+                $stmts = $parser->parse($code);
+                print_r($stmts);
+
+                $node->stmts = array_merge($stmts, $node->stmts);
+            }
         }
     }
 }

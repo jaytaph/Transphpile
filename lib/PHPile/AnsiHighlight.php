@@ -4,14 +4,18 @@ namespace PHPile;
 
 class AnsiHighlight
 {
+
+    /**
+     * Converts PHP code into highlighted syntax using ANSI escape codes to pretty print on console.
+     *
+     * @param $str
+     * @return string
+     */
     public function highlight($str)
     {
         $str = highlight_string($str, true);
         $str = html_entity_decode($str);
         $replace = array(
-            '|<font|' => "\033[31m",
-            '|color="|' => '',
-            '|</font>|' => "\033[0m",
             '|</span>|' => "\033[0m",
             '|<code>|' => '',
             '|</code>|' => '',
@@ -21,6 +25,7 @@ class AnsiHighlight
             $str = preg_replace($html, $ansi, $str);
         }
 
+        // Replace all color spans with actual escape sequences
         $str = preg_replace_callback(
             '|<span style="color: #([A-Z0-9]{6})">|',
             function ($matches) {
