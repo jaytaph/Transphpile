@@ -2,16 +2,17 @@
 
 namespace PHPile\Exception;
 
-class FinderException extends \RuntimeException {
-
+class FinderException extends \RuntimeException
+{
     protected $path;
 
-    function setPath($path) {
+    public function setPath($path)
+    {
         $this->path = $path;
     }
 
-    function getPath() {
+    public function getPath()
+    {
         return $this->path;
     }
-
 }

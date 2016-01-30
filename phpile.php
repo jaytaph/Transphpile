@@ -7,7 +7,7 @@ include __DIR__ . "/vendor/autoload.php";
 const PHPILE_SEMVER = '0.0.1';
 
 
-// Get rid of this
+// @TODO: Get rid of this
 $functionStack = array();
 
 $app = new Application("PHPile", PHPILE_SEMVER);

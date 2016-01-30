@@ -6,7 +6,8 @@ use PHPile\Exception\FinderException;
 use PHPile\IO\IOInterface;
 use Symfony\Component\Finder\Finder as SymfonyFinder;
 
-class Finder {
+class Finder
+{
     use IO\IO;
 
     /**
@@ -14,7 +15,8 @@ class Finder {
      */
     protected $sources;
 
-    function __construct(array $sources, IOInterface $io) {
+    public function __construct(array $sources, IOInterface $io)
+    {
         $this->setIO($io);
 
         $this->sources = $sources;
@@ -23,7 +25,8 @@ class Finder {
     /**
      * @return SymfonyFinder
      */
-    function find() {
+    public function find()
+    {
         $finder = SymfonyFinder::create()
             ->files()
             ->name('*.php')
@@ -31,7 +34,7 @@ class Finder {
 
         foreach ($this->getIO()->getArgument('source') as $source) {
             if (is_dir($source) && is_readable($source)) {
-                $this->getIO()->verbose(sprintf("Adding directory %s<info>$source</info>", $this->getIO()->getOption('no-recursion')?"recursively ":""), "find");
+                $this->getIO()->verbose(sprintf("Adding directory %s<info>$source</info>", $this->getIO()->getOption('no-recursion') ? 'recursively ' : ''), 'find');
                 $dirFinder = SymfonyFinder::create()
                     ->in($source)
                     ->files()
@@ -44,7 +47,7 @@ class Finder {
 
                 $it = $dirFinder;
             } elseif (is_file($source) && is_readable($source)) {
-                $this->getIO()->verbose("Adding file <info>$source</info>", "find");
+                $this->getIO()->verbose("Adding file <info>$source</info>", 'find');
                 $it = array($source);
             } else {
                 $e = new FinderException();

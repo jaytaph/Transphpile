@@ -4,12 +4,12 @@ namespace PHPile\Console;
 
 use PHPile\IO\IOInterface;
 use PHPile\IO\SymfonyIO;
-use \Symfony\Component\Console\Application as BaseApplication;
+use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Application extends BaseApplication {
-
+class Application extends BaseApplication
+{
     /**
      * @var IOInterface
      */
@@ -18,13 +18,15 @@ class Application extends BaseApplication {
     /**
      * @return IOInterface
      */
-    function getIO() {
+    public function getIO()
+    {
         return $this->io;
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
+     *
      * @return int
      */
     public function doRun(InputInterface $input, OutputInterface $output)
@@ -34,6 +36,4 @@ class Application extends BaseApplication {
 
         return parent::doRun($input, $output);
     }
-
-
 }

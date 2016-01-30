@@ -11,8 +11,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Transpile extends Command {
-
+class Transpile extends Command
+{
     /** @var \Iterator */
     protected $sources;
 
@@ -27,7 +27,6 @@ class Transpile extends Command {
 
     /** @var bool Should output be done directly to stdout */
     protected $stdout = false;
-
 
     protected function configure()
     {
@@ -46,15 +45,16 @@ class Transpile extends Command {
     }
 
     /**
-     * Do sanity checks on the arguments and options, and
-     * @param InputInterface $input
+     * Do sanity checks on the arguments and options, and.
+     *
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         // Check target
         $this->target = $this->getIo()->getOption('target');
-        if (! in_array($this->target, array('53', '54', '55', '56'))) {
+        if (!in_array($this->target, array('53', '54', '55', '56'))) {
             throw new InvalidOptionException(sprintf('Target must be either 53, 54, 55 or 56'));
         }
 
@@ -68,11 +68,12 @@ class Transpile extends Command {
             throw new InvalidOptionException(sprintf('Using both --dest or --inplace together with --stdout does not make sense.'));
         }
 
-
         // Check destination and set to '.' as default
         $this->destination = $this->getIo()->getOption('dest');
-        if (! $this->destination) $this->destination = ".";
-        if (! is_dir($this->destination) || ! is_writeable($this->destination)) {
+        if (!$this->destination) {
+            $this->destination = '.';
+        }
+        if (!is_dir($this->destination) || !is_writeable($this->destination)) {
             throw new InvalidOptionException(sprintf('Destination directory "%s" does not exist or is not writable', $this->destination));
         }
 
@@ -99,18 +100,17 @@ class Transpile extends Command {
         $this->getIo()->output('All done', 'main');
     }
 
-
     /**
      * @param $source
+     *
      * @return string
      */
-    protected function generateDestination($source) {
+    protected function generateDestination($source)
+    {
         if ($this->inplace) {
             return $source;
         }
 
-        return $this->destination . '/' . $source;
+        return $this->destination.'/'.$source;
     }
-
-
 }

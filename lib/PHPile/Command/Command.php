@@ -7,18 +7,19 @@ use PHPile\IO\IOInterface;
 use PHPile\IO\NullIO;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
-class Command extends SymfonyCommand {
-
+class Command extends SymfonyCommand
+{
     /** @var IOInterface */
     protected $io;
 
     /**
      * @return IOInterface
      */
-    function getIo() {
+    public function getIo()
+    {
         if ($this->io == null) {
             $app = $this->getApplication();
-            $this->io = ($app instanceOf Application) ? $app->getIO() : new NullIO();
+            $this->io = ($app instanceof Application) ? $app->getIO() : new NullIO();
         }
 
         return $this->io;
@@ -27,8 +28,8 @@ class Command extends SymfonyCommand {
     /**
      * @param IOInterface $io
      */
-    function setIo(IOInterface $io) {
+    public function setIo(IOInterface $io)
+    {
         $this->io = $io;
     }
-
 }

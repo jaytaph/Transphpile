@@ -2,8 +2,8 @@
 
 namespace PHPile\IO;
 
-class NullIO implements IOInterface {
-
+class NullIO implements IOInterface
+{
     public function getOption($option)
     {
         return false;
@@ -39,6 +39,4 @@ class NullIO implements IOInterface {
     public function debug($message)
     {
     }
-
-
 }

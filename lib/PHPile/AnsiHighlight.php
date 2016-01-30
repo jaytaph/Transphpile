@@ -2,9 +2,9 @@
 
 namespace PHPile;
 
-class AnsiHighlight {
-
-    function highlight($str)
+class AnsiHighlight
+{
+    public function highlight($str)
     {
         $str = highlight_string($str, true);
         $str = html_entity_decode($str);
@@ -17,7 +17,7 @@ class AnsiHighlight {
             '|</code>|' => '',
             '|<br //>|' => "\n",
         );
-        foreach ($replace as $html => $ansi){
+        foreach ($replace as $html => $ansi) {
             $str = preg_replace($html, $ansi, $str);
         }
 
@@ -42,15 +42,14 @@ class AnsiHighlight {
             $str
         );
 
-        $arr_html      = explode('<br />', $str);
-        $out           = '';
+        $arr_html = explode('<br />', $str);
+        $out = '';
 
-        foreach ($arr_html as $line){
+        foreach ($arr_html as $line) {
             $line = str_replace(chr(13), '', $line);
-            $out .= $line . "\n";
+            $out .= $line."\n";
         }
 
         return $out;
     }
-
 }

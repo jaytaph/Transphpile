@@ -2,5 +2,6 @@
 
 namespace PHPile\IO;
 
-interface IOInterface extends InputInterface, OutputInterface {
+interface IOInterface extends InputInterface, OutputInterface
+{
 }

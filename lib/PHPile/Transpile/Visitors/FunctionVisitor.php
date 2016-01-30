@@ -8,17 +8,26 @@ use PhpParser\ParserFactory;
 
 class FunctionVisitor extends NodeVisitorAbstract
 {
+    /**
+     * Store node function.
+     *
+     * @param Node $node
+     */
     public function enterNode(Node $node)
     {
-        if (! $node instanceof Node\Stmt\Function_) return;
+        if (!$node instanceof Node\Stmt\Function_) {
+            return;
+        }
 
         global $functionStack;
-        print "Stacking node '".$node->name."'\n";
-        $functionStack[] = clone $node;
+        $functionStack[] = $node;
     }
 
-    public function leaveNode(Node $node) {
-        if (! $node instanceof Node\Stmt\Function_) return;
+    public function leaveNode(Node $node)
+    {
+        if (!$node instanceof Node\Stmt\Function_) {
+            return;
+        }
 
         global $functionStack;
         array_pop($functionStack);
@@ -41,7 +50,6 @@ class FunctionVisitor extends NodeVisitorAbstract
             }
         }
 
-
         // Add code for checking scalar types
         foreach ($params as $param) {
             $code = sprintf(
@@ -54,6 +62,5 @@ class FunctionVisitor extends NodeVisitorAbstract
 
             $node->stmts = array_merge($stmts, $node->stmts);
         }
-
     }
 }

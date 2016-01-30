@@ -5,9 +5,9 @@ namespace PHPile\IO;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SymfonyIO implements IOInterface {
-
-    function __construct(InputInterface $input, OutputInterface $output)
+class SymfonyIO implements IOInterface
+{
+    public function __construct(InputInterface $input, OutputInterface $output)
     {
         $this->input = $input;
         $this->output = $output;
@@ -40,24 +40,22 @@ class SymfonyIO implements IOInterface {
 
     public function verbose($message, $tag)
     {
-        $message = '[<info>'.substr($tag, 0, 4).'</info>] ' . $message;
+        $message = '[<info>'.substr($tag, 0, 4).'</info>] '.$message;
 
         return $this->output->writeln($message, OutputInterface::VERBOSITY_VERBOSE);
     }
 
     public function veryVerbose($message, $tag)
     {
-        $message = '[<info>'.substr($tag, 0, 4).'</info>] ' . $message;
+        $message = '[<info>'.substr($tag, 0, 4).'</info>] '.$message;
 
         return $this->output->writeln($message, OutputInterface::VERBOSITY_VERY_VERBOSE);
     }
 
     public function debug($message, $tag)
     {
-        $message = '[<info>'.substr($tag, 0, 4).'</info>] ' . $message;
+        $message = '[<info>'.substr($tag, 0, 4).'</info>] '.$message;
 
         return $this->output->writeln($message, OutputInterface::VERBOSITY_DEBUG);
     }
-
-
 }
