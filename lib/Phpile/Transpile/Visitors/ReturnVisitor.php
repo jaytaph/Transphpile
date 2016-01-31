@@ -1,7 +1,8 @@
 <?php
 
-namespace PHPile\Transpile\Visitors;
+namespace Phpile\Transpile\Visitors;
 
+use Phpile\Transpile\NodeStateStack;
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
@@ -18,21 +19,20 @@ class ReturnVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        global $functionStack;
-        if (count($functionStack) == 0) {
-            // encountered a return in global scope
+        $functionNode = NodeStateStack::getInstance()->currentFunction;
+
+        // No functionNode means we are doing a return in the global scope
+        if (! $functionNode) {
             return null;
         }
 
         // Check return type of current function
-        $functionNode = $functionStack[count($functionStack) - 1];
         if ($functionNode->returnType == null) {
             return null;
         }
 
         // Not strict, so no need to check return type;
-        global $is_strict;
-        if (! $is_strict) {
+        if (! NodeStateStack::getInstance()->isStrict) {
             return null;
         }
 

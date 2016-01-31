@@ -1,19 +1,12 @@
 <?php
 
-use PHPile\Console\Application;
+use Phpile\Console\Application;
 
 include __DIR__ . "/vendor/autoload.php";
 
 const PHPILE_SEMVER = '0.0.1';
 
-
-// @TODO: Get rid of this
-$functionStack = array();
-$is_strict = false;
-$anonClasses = array();
-$currentClass = null;
-
-$app = new Application("PHPile", PHPILE_SEMVER);
-$app->add(new PHPile\Command\Transpile());
+$app = new Application("Phpile", PHPILE_SEMVER);
+$app->add(new Phpile\Command\Transpile());
 $app->run();
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace PHPile;
+namespace Phpile;
 
-use PHPile\Exception\FinderException;
-use PHPile\IO\IOInterface;
+use Phpile\Exception\FinderException;
+use Phpile\IO\IOInterface;
 use Symfony\Component\Finder\Finder as SymfonyFinder;
 
 class Finder

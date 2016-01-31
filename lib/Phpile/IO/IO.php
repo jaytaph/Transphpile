@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPile\IO;
+namespace Phpile\IO;
 
 trait IO
 {

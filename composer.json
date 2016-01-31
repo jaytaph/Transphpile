@@ -1,6 +1,6 @@
 {
     "name": "jaytaph/phpile",
-    "description": "PHP 7.0 Transpiler",
+    "description": "PHP 7.0 to 5.3 Transpiler",
 
     "license": "BSD-3",
     "authors": [{
@@ -9,7 +9,7 @@
     }],
 
     "autoload": {
-        "psr-4": {"PHPile\\": "lib/PHPile"}
+        "psr-4": {"Phpile\\": "lib/Phpile"}
     },
 
     "require": {

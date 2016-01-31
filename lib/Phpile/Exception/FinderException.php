@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPile\Exception;
+namespace Phpile\Exception;
 
 class FinderException extends \RuntimeException
 {

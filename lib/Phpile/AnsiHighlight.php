@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPile;
+namespace Phpile;
 
 class AnsiHighlight
 {

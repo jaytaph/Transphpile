@@ -1,9 +1,9 @@
 <?php
 
-namespace PHPile\Command;
+namespace Phpile\Command;
 
-use PHPile\Exception\FinderException;
-use PHPile\Finder;
+use Phpile\Exception\FinderException;
+use Phpile\Finder;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputArgument;
@@ -87,7 +87,7 @@ class Transpile extends Command
     {
         $this->getIo()->verbose('Starting', 'main');
 
-        $transpiler = new \PHPile\Transpile\Transpile($this->getIo());
+        $transpiler = new \Phpile\Transpile\Transpile($this->getIo());
         foreach ($this->sources as $source) {
             $destination = $this->generateDestination($source);
 

@@ -1,12 +1,13 @@
 <?php
 
-namespace PHPile\Transpile\Visitors;
+namespace Phpile\Transpile\Visitors;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Node\Stmt\Interface_;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
+use Phpile\Transpile\NodeStateStack;
 
 /*
  * Keeps track in which function we currently reside, which typehint it returns and will add
@@ -23,30 +24,25 @@ class FunctionVisitor extends NodeVisitorAbstract
     public function enterNode(Node $node)
     {
         if ($node instanceof Node\FunctionLike) {
-            global $functionStack;
-            $functionStack[] = $node;
+            NodeStateStack::getInstance()->currentFunction = $node;
         }
 
         if ($node instanceof ClassLike) {
-            global $currentClass;
-            $currentClass = $node;
-            print "New current class: ".$currentClass->name."\n";
+            NodeStateStack::getInstance()->currentClass = $node;
         }
     }
 
     public function leaveNode(Node $node)
     {
         if ($node instanceof ClassLike) {
-            global $currentClass;
-            $currentClass = null;
+            NodeStateStack::getInstance()->currentClass = null;
         }
 
         if (!$node instanceof Node\FunctionLike) {
             return;
         }
 
-        global $functionStack;
-        $functionNode = array_pop($functionStack);
+        $functionNode = NodeStateStack::getInstance()->currentFunction;
 
         // Remove return type if set
         if ($node->returnType) {
@@ -67,8 +63,7 @@ class FunctionVisitor extends NodeVisitorAbstract
         }
 
         // Don't add checks when we don't enforce strict
-        global $is_strict;
-        if (! $is_strict) {
+        if (! NodeStateStack::getInstance()->isStrict) {
             return null;
         }
 
@@ -78,10 +73,7 @@ class FunctionVisitor extends NodeVisitorAbstract
         }
 
         // No typehinting on interfaces
-        global $currentClass;
-        print "Current class: ".(isset($currentClass) ? $currentClass->name : "<null>")." (".get_class($currentClass).")\n";
-        if ($currentClass instanceof Interface_) {
-            print "INTERFACEDECTED!";
+        if (NodeStateStack::getInstance()->currentClass instanceof Interface_) {
             return null;
         }
 

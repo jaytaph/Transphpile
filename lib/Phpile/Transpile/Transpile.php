@@ -1,18 +1,15 @@
 <?php
 
-namespace PHPile\Transpile;
+namespace Phpile\Transpile;
 
-use PHPile\IO\IOInterface;
-use PhpParser\Node\Stmt\Declare_;
-use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\Node\Stmt\Use_;
+use Phpile\IO\IOInterface;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 
 class Transpile
 {
-    use \PHPile\IO\IO;
+    use \Phpile\IO\IO;
 
     public function __construct(IOInterface $io)
     {
@@ -33,12 +30,10 @@ class Transpile
 
 //        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
 //        $stmts = $parser->parse('<?php
-//
-//        interface Logger
-//        {
-//            public function log(string $msg);
-//        }
-//
+//              interface Logger
+//              {
+//                  public function log(string $msg);
+//              }
 //        ');
 //        print_r($stmts);
 //        exit(1);
@@ -48,23 +43,8 @@ class Transpile
         $stmts = $parser->parse($code);
 
         // Custom traversal does the actual transpiling
-        $traverser = $this->getTraverser();
+        $traverser = self::getTraverser();
         $stmts = $traverser->traverse($stmts);
-
-
-        // Add final anonymous classes to the statements
-        global $anonClasses;
-
-        // We must transpile anonymous classes as well, as we haven't done this yet
-        $traverser = $this->getTraverser();
-        $anonClassStmts = $traverser->traverse($anonClasses);
-
-        // Find hook point for anonymous classes, must be after declare, namespaces and use-statements, and can before anything else
-        $idx = $this->getAnonymousClassHookIndex($stmts);
-
-        $preStmts = array_slice($stmts, 0, $idx);
-        $postStmts = array_slice($stmts, $idx);
-        $stmts = array_merge($preStmts, $anonClassStmts, $postStmts);
 
 
         $prettyPrinter = new Standard();
@@ -83,35 +63,20 @@ class Transpile
 
     }
 
-    protected function getAnonymousClassHookIndex(array $stmts)
-    {
-        // Find the first statement that is not a declare, namespace or use-statement
-        foreach ($stmts as $idx => $stmt) {
-            if (! $stmt instanceof Declare_ &&
-                ! $stmt instanceof Use_ &&
-                ! $stmt instanceof Namespace_) {
-                return $idx;
-            }
-        }
-
-        // Seems this file only consist fo declares, use and namespaces.. That should not happen
-        throw new \RuntimeException("Cannot find an location to insert anonymous classes");
-    }
-
     /**
      * @return NodeTraverser
      */
-    public function getTraverser()
+    static public function getTraverser()
     {
-        $traverser = new NodeTraverser();
+        $traverser = new StackVarNodeTraverser();
 
         // Find Path
-        $reflector = new \ReflectionObject($this);
+        $reflector = new \Reflectionclass(__CLASS__);
         $path = $reflector->getFileName();
         $path = dirname($path);
 
         // Generate FQCN
-        $fqcnPath = get_class($this);
+        $fqcnPath = __CLASS__;
         $fqcnPath = explode('\\', $fqcnPath);
         $fqcnPath[count($fqcnPath) - 1] = 'Visitors';
         $fqcnPath = implode('\\', $fqcnPath);
@@ -121,7 +86,6 @@ class Transpile
             /* @var \SplFileInfo $fileInfo */
             $class = str_replace('.php', '', $fileInfo->getFilename());
             $fqcn = $fqcnPath.'\\'.$class;
-            $this->getIo()->debug('Loading visitor: '.$fqcn, 'trns');
 
             $traverser->addVisitor(new $fqcn());
         }

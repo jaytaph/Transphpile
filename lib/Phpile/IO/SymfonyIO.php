@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPile\IO;
+namespace Phpile\IO;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

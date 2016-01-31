@@ -1,10 +1,11 @@
 <?php
 
-namespace PHPile\Transpile\Visitors;
+namespace Phpile\Transpile\Visitors;
 
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
+use Phpile\Transpile\NodeStateStack;
 
 /*
  * Removes declare('strict_type') statements, and keep references if we are running strict_type or not for this file
@@ -24,8 +25,7 @@ class DeclareVisitor extends NodeVisitorAbstract
             }
 
             // Set global strict value so others know what to do with scalar typehinting and return types.
-            global $is_strict;
-            $is_strict = ($declare->value->value == 1);
+            NodeStateStack::getInstance()->isStrict = ($declare->value->value == 1);
 
             // Remove the strict_type declare
             return NodeTraverser::REMOVE_NODE;

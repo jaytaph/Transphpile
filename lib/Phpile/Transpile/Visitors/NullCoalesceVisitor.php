@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPile\Transpile\Visitors;
+namespace Phpile\Transpile\Visitors;
 
 use PhpParser\Comment;
 use PhpParser\Node;

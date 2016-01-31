@@ -1,9 +1,9 @@
 <?php
 
-namespace PHPile\Console;
+namespace Phpile\Console;
 
-use PHPile\IO\IOInterface;
-use PHPile\IO\SymfonyIO;
+use Phpile\IO\IOInterface;
+use Phpile\IO\SymfonyIO;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
