@@ -30,10 +30,7 @@ class Transpile
 
 //        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
 //        $stmts = $parser->parse('<?php
-//              interface Logger
-//              {
-//                  public function log(string $msg);
-//              }
+//              use foo\bar as baz;
 //        ');
 //        print_r($stmts);
 //        exit(1);
