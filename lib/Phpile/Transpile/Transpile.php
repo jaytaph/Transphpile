@@ -72,17 +72,28 @@ class Transpile
         $path = $reflector->getFileName();
         $path = dirname($path);
 
-        // Generate FQCN
-        $fqcnPath = __CLASS__;
-        $fqcnPath = explode('\\', $fqcnPath);
-        $fqcnPath[count($fqcnPath) - 1] = 'Visitors';
-        $fqcnPath = implode('\\', $fqcnPath);
+        // Generate base FQCN and path based on the current file
+        $baseFqcn = __CLASS__;
+        $baseFqcn = explode('\\', $baseFqcn);
+        $baseFqcn[count($baseFqcn) - 1] = 'Visitors';
+        $baseFqcn = implode('\\', $baseFqcn);
+
+        $baseFqcnPath = dirname(__FILE__) . "/Visitors/";
+
 
         // Iterate node visitors and add them to the traverser
-        foreach (new \FilesystemIterator($path.'/Visitors', \FilesystemIterator::SKIP_DOTS) as $fileInfo) {
+        $it = new \RecursiveDirectoryIterator($path.'/Visitors', \RecursiveDirectoryIterator::SKIP_DOTS);
+        $it = new \RecursiveIteratorIterator($it, \RecursiveIteratorIterator::LEAVES_ONLY);
+        foreach ($it as $fileInfo) {
             /* @var \SplFileInfo $fileInfo */
-            $class = str_replace('.php', '', $fileInfo->getFilename());
-            $fqcn = $fqcnPath.'\\'.$class;
+
+            // Convert path into FQCN
+            $class = $fileInfo->getPathname();
+            $class = str_replace($baseFqcnPath, "", $class);
+            $class = str_replace('.php', '', $class);
+            $class = str_replace('/', '\\', $class);
+
+            $fqcn = $baseFqcn.'\\'.$class;
 
             $traverser->addVisitor(new $fqcn());
         }

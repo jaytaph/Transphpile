@@ -1,11 +1,11 @@
 <?php
 
-namespace Phpile\Transpile\Php70\Visitors;
+namespace Phpile\Transpile\Visitors\Php70;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Use_;
 use PhpParser\NodeVisitorAbstract;
-use Transpile\Exception\TranspileException;
+use Phpile\Transpile\Exception\TranspileException;
 
 /*
  * converts  "use foo\{bar,baz}" into:

@@ -1,6 +1,6 @@
 <?php
 
-namespace Phpile\Transpile\Php70\Visitors;
+namespace Phpile\Transpile\Visitors\Php70;
 
 use PhpParser\Node;
 use PhpParser\NodeTraverser;

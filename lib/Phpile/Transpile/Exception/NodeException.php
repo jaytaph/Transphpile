@@ -1,6 +1,6 @@
 <?php
 
-namespace Transpile\Exception;
+namespace Phpile\Transpile\Exception;
 
 use PhpParser\Node;
 
