@@ -1,6 +1,6 @@
 <?php
 
-namespace Phpile\Transpile\Visitors;
+namespace Phpile\Transpile\Php70\Visitors;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Use_;

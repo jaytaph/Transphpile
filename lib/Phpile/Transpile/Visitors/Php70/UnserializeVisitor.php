@@ -1,12 +1,18 @@
 <?php
 
-namespace Phpile\Transpile\Visitors;
+namespace Phpile\Transpile\Php70\Visitors;
 
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
+use Transpile\Exception\TranspileException;
 
 /*
+ * converts unserialize($foo, array('allowed_classes' => ... ) into
+ *
+ *    unserialize($foo)
+ *
+ * but ONLY when "allowed_classes => false"
  *
  */
 
@@ -14,17 +20,18 @@ class UnserializeVisitor extends NodeVisitorAbstract
 {
     public function leaveNode(Node $node)
     {
+        // Trigger on function call "unserialize"
         if (!$node instanceof Node\Expr\FuncCall || $node->name != "unserialize") {
             return null;
         }
 
+        // Continue only when unserialize() is used with two or more arguments
         if (count($node->args) < 2) {
             return null;
         }
 
+        // Assume OptionsNode is always an array
         $optionsNode = $node->args[1]->value;
-
-        // Options is always an array
 
         foreach ($optionsNode->items as $itemNode) {
             if ($itemNode->key->value == "allowed_classes") {
@@ -35,18 +42,22 @@ class UnserializeVisitor extends NodeVisitorAbstract
 
                     if ($value == "false") {
                         // allowed_classes = false, so no classes are allowed
-                        print "AC = false\n";
+                        $ex = new TranspileException("Cannot transpile unserialize() with allowed_classes = false");
+                        $ex->setNode($node);
+                        throw new $ex;
                     }
 
                     if ($value == "true") {
                         // allowed_classes = true, so we can remove the options safely
-                        print "AC = true\n";
                         array_pop($node->args);
                         return $node;
                     }
                 } elseif ($valueNode instanceOf Node\Expr\Array_) {
                     // Array keeps a list of classes that may be initialized
-                    print "AC = array\n";
+
+                    $ex = new TranspileException("Cannot transpile unserialize() with allowed_classes = array()");
+                    $ex->setNode($node);
+                    throw new $ex;
                 }
             }
         }

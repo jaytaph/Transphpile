@@ -1,6 +1,6 @@
 <?php
 
-namespace Phpile\Transpile\Visitors;
+namespace Phpile\Transpile\Php70\Visitors;
 
 use Phpile\Transpile\Transpile;
 use Phpile\Transpile\NodeStateStack;

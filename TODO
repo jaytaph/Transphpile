@@ -4,3 +4,8 @@ Generic:
 [ ] Self-update
 
 PHP7:
+[ ] Closure::call()
+[ ] Expectations
+[ ] Generator Return Expressions
+[ ] Generator delegation
+[ ] Unserialize with allowed_classes
