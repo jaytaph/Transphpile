@@ -2,17 +2,16 @@
 
 namespace Phpile\Transpile\Visitors\Php70;
 
+use Phpile\Transpile\Exception\TranspileException;
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
-use PhpParser\ParserFactory;
-use Transpile\Exception\TranspileException;
 
 /*
  * converts unserialize($foo, array('allowed_classes' => ... ) into
  *
- *    unserialize($foo)
+ *    phpile\unserialize::unserializer($foo, array('allowed_classes')
  *
- * but ONLY when "allowed_classes => false"
+ * but ONLY when "allowed_classes => true" or an array
  *
  */
 
@@ -33,6 +32,14 @@ class UnserializeVisitor extends NodeVisitorAbstract
         // Assume OptionsNode is always an array
         $optionsNode = $node->args[1]->value;
 
+
+        // Setup unserializer node
+        $unserializeNode = new Node\Expr\StaticCall(
+            new Node\Name('\phpile\unserializer'),
+            new Node\Name('unserialize'),
+            $node->args
+        );
+
         foreach ($optionsNode->items as $itemNode) {
             if ($itemNode->key->value == "allowed_classes") {
                 $valueNode = $itemNode->value;
@@ -42,9 +49,7 @@ class UnserializeVisitor extends NodeVisitorAbstract
 
                     if ($value == "false") {
                         // allowed_classes = false, so no classes are allowed
-                        $ex = new TranspileException("Cannot transpile unserialize() with allowed_classes = false");
-                        $ex->setNode($node);
-                        throw new $ex;
+                        return $unserializeNode;
                     }
 
                     if ($value == "true") {
@@ -54,10 +59,7 @@ class UnserializeVisitor extends NodeVisitorAbstract
                     }
                 } elseif ($valueNode instanceOf Node\Expr\Array_) {
                     // Array keeps a list of classes that may be initialized
-
-                    $ex = new TranspileException("Cannot transpile unserialize() with allowed_classes = array()");
-                    $ex->setNode($node);
-                    throw new $ex;
+                    return $unserializeNode;
                 }
             }
         }
