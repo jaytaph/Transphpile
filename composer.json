@@ -1,17 +1,18 @@
 {
-    "name": "jaytaph/phpile",
-    "description": "PHP 7.0 to 5.3 Transpiler",
-
+    "name": "jaytaph/transphpile",
+    "type": "application",
+    "description": "PHP 7.0 to 5.6 Transpiler",
     "license": "BSD-3",
+
     "authors": [{
         "name": "Joshua Thijssen",
         "email": "jthijssen@noxlogic.nl"
     }],
 
     "autoload": {
-        "psr-4": {"Phpile\\": "lib/Phpile"}
+        "psr-4": {"Transphpile\\": "lib/Transphpile"}
     },
-
+    "bin": ["transphpile"],
     "require": {
         "nikic/php-parser": "^2.0",
         "symfony/console": "^2.8",

@@ -18,7 +18,7 @@
 
     <filter>
         <whitelist>
-            <directory suffix=".php">./lib/Phpile/</directory>
+            <directory suffix=".php">./lib/Transphpile/</directory>
         </whitelist>
     </filter>
 </phpunit>

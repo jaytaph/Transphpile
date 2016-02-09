@@ -2,7 +2,7 @@
 
 namespace {
 
-    use Phpile\Unserializer;
+    use Transphpile\Unserializer;
 
     class c2 {
         protected $testprop;
@@ -69,7 +69,7 @@ namespace {
 }
 
 
-namespace Phpile {
+namespace Transphpile {
 
     class Unserializer {
         protected $str = "";                        // Current unserialize string
