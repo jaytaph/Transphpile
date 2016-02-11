@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 use Transphpile\Console\Application;
@@ -8,10 +9,11 @@ set_error_handler(function ($severity, $message, $file, $line) {
     }
 });
 
-if (file_exists($a = __DIR__.'/../../autoload.php')) {
-    require_once $a;
+if (file_exists($path = __DIR__.'/../vendor/autoload.php')) {
+    require_once $path;
 } else {
-    require_once __DIR__.'/vendor/autoload.php';
+    fwrite(STDERR, "Error: please run 'composer install' to install dependencies\n");
+    exit(1);
 }
 
 $app = new Application();
