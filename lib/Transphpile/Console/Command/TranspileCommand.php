@@ -18,7 +18,7 @@ class TranspileCommand extends Command
 
     /** @var string Destination directory for files */
     protected $destination;
-    
+
     /** @var bool Should output be done directly to stdout */
     protected $stdout = false;
 
@@ -53,12 +53,6 @@ class TranspileCommand extends Command
         $this->destination = $this->getIo()->getOption('dest');
         if (!$this->destination) {
             $this->destination = './php5';
-        }
-        if (!is_dir($this->destination) || !is_writeable($this->destination)) {
-            @mkdir($this->destination);
-            if (!is_dir($this->destination) || !is_writeable($this->destination)) {
-                throw new InvalidOptionException(sprintf('Destination directory "%s" does not exist or is not writable or could not be created.', $this->destination));
-            }
         }
 
         // Find sources

@@ -2,6 +2,7 @@
 
 namespace Transphpile\Transpile;
 
+use Symfony\Component\Console\Exception\InvalidOptionException;
 use Transphpile\IO\IOInterface;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
@@ -18,22 +19,8 @@ class Transpile
 
     public function transpile($srcPath, $dstPath)
     {
-        $inplace = false;
-        if ($srcPath == $dstPath) {
-            // Inline replacement
-            $inplace = true;
-            $dstPath = $dstPath.uniqid();
-        }
-
         // transpile based on target version
         $code = file_get_contents($srcPath);
-
-//        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
-//        $stmts = $parser->parse('<?php
-//              use foo\bar as baz;
-//        ');
-//        print_r($stmts);
-//        exit(1);
 
         // Parse into statements
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
@@ -48,14 +35,17 @@ class Transpile
 
         if ($dstPath == '-') {
             // Output directly to stdout
-            $this->getIo()->output("<?php \n". $prettyPrinter->prettyPrint($stmts));
+            $this->getIo()->output($this->getStub() . $prettyPrinter->prettyPrint($stmts));
         } else {
-            file_put_contents($dstPath, "<?php \n".$prettyPrinter->prettyPrint($stmts));
-        }
+            $dir = dirname($dstPath);
+            if (!is_dir($dir) || !is_writeable($dir)) {
+                @mkdir($dir, 0777, true);
+                if (!is_dir($dir) || !is_writeable($dir)) {
+                    throw new InvalidOptionException(sprintf('Destination directory "%s" does not exist or is not writable or could not be created.', $dir));
+                }
+            }
 
-        // If inplace, we have to (atomically) rename (temp) dest to source
-        if ($inplace) {
-            rename($dstPath, $srcPath);
+            file_put_contents($dstPath, $this->getStub() . $prettyPrinter->prettyPrint($stmts));
         }
 
     }
@@ -99,5 +89,18 @@ class Transpile
         }
 
         return $traverser;
+    }
+
+    protected function getStub() {
+        $stub = <<< STUB
+
+<?php
+
+/*
+ * This code has been transpiled through https://github.com/jaytaph/transphpile
+ */
+
+STUB;
+        return $stub;
     }
 }
