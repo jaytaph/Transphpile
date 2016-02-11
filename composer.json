@@ -12,13 +12,19 @@
     "autoload": {
         "psr-4": {"Transphpile\\": "lib/Transphpile"}
     },
-    "bin": ["transphpile"],
+    "scripts" : {
+        "post-install-cmd" : [
+            "patch -p0 < phar.patch"
+        ]
+    },
+    "bin": [ "bin/transphpile" ],
     "require": {
         "nikic/php-parser": "^2.0",
         "symfony/console": "^2.8",
         "symfony/finder": "^2.8"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.1"
+        "phpunit/phpunit": "^5.1",
+        "clue/phar-composer": "^1.0"
     }
 }
