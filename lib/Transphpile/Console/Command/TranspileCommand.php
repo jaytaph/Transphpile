@@ -18,10 +18,7 @@ class TranspileCommand extends Command
 
     /** @var string Destination directory for files */
     protected $destination;
-
-    /** @var bool Should do inplace changes */
-    protected $inplace = false;
-
+    
     /** @var bool Should output be done directly to stdout */
     protected $stdout = false;
 
@@ -34,8 +31,7 @@ class TranspileCommand extends Command
             ->addArgument('source', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Array of files to transpile')
 
             ->addOption('no-recursion', '', InputOption::VALUE_NONE, 'Do not recursively seek directories')
-            ->addOption('inplace', '', InputOption::VALUE_NONE, 'Do an in-place compilation (destroys source files!)')
-            ->addOption('dest', 'd', InputOption::VALUE_REQUIRED, 'Compile files into this directory (defaults to "./php53")')
+            ->addOption('dest', 'd', InputOption::VALUE_REQUIRED, 'Compile files into this directory (defaults to "./php5")')
             ->addOption('stdout', '', InputOPtion::VALUE_NONE, 'Output to stdout instead of file')
         ;
     }
@@ -48,20 +44,15 @@ class TranspileCommand extends Command
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        // Check inplace and dest mutual exclusivity
-        if ($this->getIo()->getOption('inplace') && $this->getIo()->getOption('dest')) {
-            throw new InvalidOptionException(sprintf('Using both --dest and --inplace does not make sense.'));
-        }
-
         // Check stdout mutual exclusivity
-        if (($this->getIo()->getOption('inplace') || $this->getIo()->getOption('dest')) && $this->getIo()->getOption('stdout')) {
-            throw new InvalidOptionException(sprintf('Using both --dest or --inplace together with --stdout does not make sense.'));
+        if ($this->getIo()->getOption('dest') && $this->getIo()->getOption('stdout')) {
+            throw new InvalidOptionException(sprintf('Using both --dest together with --stdout does not make sense.'));
         }
 
         // Check destination and set to '.' as default
         $this->destination = $this->getIo()->getOption('dest');
         if (!$this->destination) {
-            $this->destination = './php53';
+            $this->destination = './php5';
         }
         if (!is_dir($this->destination) || !is_writeable($this->destination)) {
             @mkdir($this->destination);
@@ -105,11 +96,6 @@ class TranspileCommand extends Command
      */
     protected function generateDestination($source)
     {
-        // Inplace means the destination is the same as the source
-        if ($this->inplace) {
-            return $source;
-        }
-
         // When using stdout, use the '-' to reflect this
         if ($this->getIo()->getOption('stdout')) {
             return '-';

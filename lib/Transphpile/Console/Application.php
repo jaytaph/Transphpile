@@ -8,6 +8,8 @@ use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use Transphpile\Console\Command as Commands;
+
 class Application extends BaseApplication
 {
     const TRANSPHPILE_SEMVER = '0.0.1';
@@ -20,10 +22,10 @@ class Application extends BaseApplication
 
     function __construct()
     {
-        parent::__construct('Transphpile', TRANSPHPILE_SEMVER);
+        parent::__construct('Transphpile', self::TRANSPHPILE_SEMVER);
 
-        $this->add(new Transphpile\Console\Command\TranspileCommand());
-        $this->add(new Transphpile\Console\Command\SelfUpdateCommand());
+        $this->add(new Commands\TranspileCommand());
+        $this->add(new Commands\SelfUpdateCommand());
     }
 
     /**

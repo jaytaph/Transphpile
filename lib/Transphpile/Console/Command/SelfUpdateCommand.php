@@ -4,12 +4,10 @@ namespace Transphpile\Console\Command;
 
 // Code based on self-update from php-cs-fixer:
 // https://github.com/FriendsOfPHP/PHP-CS-Fixer/blob/1.12/Symfony/CS/Console/Command/SelfUpdateCommand.php
-
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SelfUpdate extends Command
+class SelfUpdateCommand extends Command
 {
     protected function configure()
     {

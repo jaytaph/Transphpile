@@ -9,7 +9,7 @@ set_error_handler(function ($severity, $message, $file, $line) {
     }
 });
 
-Phar::mapPhar('transphpile.phar');
+Phar::mapPhar();
 require_once 'phar://transphpile.phar/vendor/autoload.php';
 
 $app = new Application();
