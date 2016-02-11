@@ -1,11 +1,14 @@
-Generic:
+The following steeds needs to be done:
 
-[ ] Phar
-[ ] Self-update
-
-PHP7:
-[ ] Closure::call()
+PHP7 -> PHP 5.6
+===============
+[-] Closure::call()
 [ ] Expectations
 [ ] Generator Return Expressions
 [ ] Generator delegation
-[ ] Unserialize with allowed_classes
+[X] Unserialize with allowed_classes
+
+
+PHP 5.6 -> PHP 5.5
+==================
+[ ] Everything
