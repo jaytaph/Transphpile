@@ -48,7 +48,7 @@ class ReturnVisitor extends NodeVisitorAbstract
 
         // Generate remainder code
 
-        // @TODO: It might be easier to read whenwe generate ALL code directly from Nodes instead of generating it
+        // @TODO: It might be easier to read when we generate ALL code directly from Nodes instead of generating it
 
         if (in_array($functionNode->returnType, array('string', 'bool', 'int', 'float'))) {
             // Scalars are treated a bit different
