@@ -93,11 +93,10 @@ class Transpile
 
     protected function getStub() {
         $stub = <<< STUB
-
 <?php
 
 /*
- * This code has been transpiled through https://github.com/jaytaph/transphpile
+ * This code has been transpiled via TransPHPile. For more information, visit https://github.com/jaytaph/transphpile
  */
 
 STUB;
