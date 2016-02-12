@@ -53,10 +53,20 @@ class FunctionVisitor extends NodeVisitorAbstract
         $params = array();
         foreach ($node->params as $param) {
             if (in_array($param->type, array('string', 'int', 'float', 'bool'))) {
+                $canBeNull = false;
+                if ($param->default != null) {
+                    if ($param->default instanceof Node\Expr\ConstFetch) {
+                        if ($param->default->name->parts[0] == "null") {
+                            $canBeNull = true;
+                        }
+                    }
+                }
+
                 $params[] = array(
                     'type' => $param->type,
                     'arg' => $param->name,
                     'func' => $node->name,
+                    'nullable' => $canBeNull,
                 );
                 $param->type = null;
             }
@@ -80,8 +90,10 @@ class FunctionVisitor extends NodeVisitorAbstract
         // Add code for checking scalar types
         foreach ($params as $param) {
             $code = sprintf(
-                    '<?php if (! is_%s($%s)) { throw new \InvalidArgumentException("Argument \$%s passed to %s() must be of the type %s, ".get_class($%s)." given"); }',
-                    $param['type'], $param['arg'], $param['arg'], $param['func'], $param['type'], $param['arg']
+                '<?php if (! is_%s($%s) %s) { throw new \InvalidArgumentException("Argument \$%s passed to %s() must be of the type %s, ".get_class($%s)." given"); }',
+                $param['type'], $param['arg'],
+                ($param['nullable'] ? 'and ! is_null($'.$param['arg'].')' : ""),
+                $param['arg'], $param['func'], $param['type'], $param['arg']
             );
 
             $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
