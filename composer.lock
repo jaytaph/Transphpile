@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9aa160aca3ef34f2d97f25ea68135c3b",
-    "content-hash": "31ac23f340d894860cd014ed0dc84975",
+    "hash": "ee310262f122de669174e92a22fe3267",
+    "content-hash": "9eeada980bec2b26720a940ce3c0ceef",
     "packages": [
         {
             "name": "nikic/php-parser",
@@ -230,16 +230,16 @@
     "packages-dev": [
         {
             "name": "clue/phar-composer",
-            "version": "v1.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/clue/phar-composer.git",
-                "reference": "3ea2cd961c45290b2578c6bf971ae028bfcd6377"
+                "url": "https://github.com/jaytaph/phar-composer.git",
+                "reference": "f67e87530a1178eec825f0123cd3f5b383f6ed02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/clue/phar-composer/zipball/3ea2cd961c45290b2578c6bf971ae028bfcd6377",
-                "reference": "3ea2cd961c45290b2578c6bf971ae028bfcd6377",
+                "url": "https://api.github.com/repos/jaytaph/phar-composer/zipball/f67e87530a1178eec825f0123cd3f5b383f6ed02",
+                "reference": "f67e87530a1178eec825f0123cd3f5b383f6ed02",
                 "shasum": ""
             },
             "require": {
@@ -263,7 +263,6 @@
                     "Clue": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -280,7 +279,10 @@
                 "bundle dependencies",
                 "executable phar"
             ],
-            "time": "2015-11-15 18:36:37"
+            "support": {
+                "source": "https://github.com/jaytaph/phar-composer/tree/master"
+            },
+            "time": "2016-02-12 09:04:24"
         },
         {
             "name": "doctrine/inflector",
@@ -1861,7 +1863,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "clue/phar-composer": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

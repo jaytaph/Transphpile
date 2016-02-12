@@ -12,11 +12,10 @@
     "autoload": {
         "psr-4": {"Transphpile\\": "lib/Transphpile"}
     },
-    "scripts" : {
-        "post-install-cmd" : [
-            "patch -p0 < phar.patch"
-        ]
-    },
+    "repositories": [{
+        "type": "vcs",
+        "url": "https://github.com/jaytaph/phar-composer"
+    }],
     "bin": [ "bin/transphpile" ],
     "require": {
         "nikic/php-parser": "^2.0",
@@ -25,6 +24,6 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^5.1",
-        "clue/phar-composer": "^1.0"
+        "clue/phar-composer": "dev-master"
     }
 }
