@@ -67,7 +67,7 @@ class ClosureCallVisitor extends NodeVisitorAbstract
             ),
             'stmts' => array(
                 new Node\Stmt\If_(
-                    new Node\Expr\Instanceof_(new Node\Expr\Variable($tmpClosureVar), new Node\Name('Closure')),
+                    new Node\Expr\Instanceof_(new Node\Expr\Variable($tmpClosureVar), new Node\Name('\Closure')),
                     array(
                         'stmts' => array(
                             new Node\Expr\Assign(
@@ -109,7 +109,7 @@ class ClosureCallVisitor extends NodeVisitorAbstract
         // Assigns the closure to a temporary var so we can add it to the closure 'use' list.
         $assignNode = new Node\Expr\Assign(
             new Node\Expr\Variable($tmpClosureVar),
-            new Node\Expr\Variable($node)
+            $node->var
         );
 
 
