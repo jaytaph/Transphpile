@@ -55,7 +55,7 @@ class ReturnVisitor extends NodeVisitorAbstract
             $code = sprintf(
                 '<?php '."\n".
                 '  if (! is_%s($'.$retVar.')) { '."\n".
-                '    throw new \InvalidArgumentException("Argument returned must be of the type %s, ".get_class($'.$retVar.')." given"); '."\n".
+                '    throw new \InvalidArgumentException("Argument returned must be of the type %s, ".$'.$retVar.'." given"); '."\n".
                 '  } '."\n".
                 '  return $'.$retVar.'; ',
                 $functionNode->returnType, $functionNode->returnType
@@ -64,8 +64,8 @@ class ReturnVisitor extends NodeVisitorAbstract
             // Otherwise use is_a for check against classes
             $code = sprintf(
                 '<?php '."\n".
-                '  if (! is_a($'.$retVar.', "%s")) { '."\n".
-                '    throw new \InvalidArgumentException("Argument returned must be of the type %s, ".get_class($'.$retVar.')." given"); '."\n".
+                '  if (! $'.$retVar.' instanceof %s) { '."\n".
+                '    throw new \InvalidArgumentException("Argument returned must be of the type ".(%s::class).", ".get_class($'.$retVar.')." given"); '."\n".
                 '  } '."\n".
                 '  return $'.$retVar.'; ',
                 $functionNode->returnType, $functionNode->returnType
