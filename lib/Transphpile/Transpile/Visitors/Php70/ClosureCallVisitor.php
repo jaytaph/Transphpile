@@ -15,12 +15,13 @@ use PhpParser\NodeVisitorAbstract;
  *
  * into:
  *
- *          echo call_user_func(function($arg1, $arg2) use ($closure) {
+ *          $tmp_var = $closure;
+ *          echo call_user_func(function($arg1, $arg2) use ($tmp_var) {
  *             if ($closure instanceOf Closure) {
- *                  $tmp = $closure->bindTo($arg1, get_class($arg1));
+ *                  $tmp = $tmp_var->bindTo($arg1, get_class($arg1));
  *                  return $tmp($arg2);
  *              } else {
- *                  return $closure->call($arg1, $arg2);
+ *                  return $tmp_var->call($arg1, $arg2);
  *              }
  *          }, $three, 4);
  */
@@ -45,8 +46,7 @@ class ClosureCallVisitor extends NodeVisitorAbstract
          }, $four, 3);
 */
 
-        // in a "$closure::call",  $varName will be "closure"
-        $varName = $node->var->name;
+        $tmpClosureVar = "closureCall_".uniqid();
 
         // Set the correct number of params, naming them arg1..argN
         $params = array();
@@ -63,17 +63,17 @@ class ClosureCallVisitor extends NodeVisitorAbstract
         $closureNode = new Node\Expr\Closure(array(
             'params' => $params,
             'uses' => array(
-                new Node\Param($varName)
+                new Node\Param($tmpClosureVar)
             ),
             'stmts' => array(
                 new Node\Stmt\If_(
-                    new Node\Expr\Instanceof_(new Node\Expr\Variable($varName), new Node\Name('Closure')),
+                    new Node\Expr\Instanceof_(new Node\Expr\Variable($tmpClosureVar), new Node\Name('Closure')),
                     array(
                         'stmts' => array(
                             new Node\Expr\Assign(
                                 new Node\Expr\Variable('tmp'),
                                 new Node\Expr\MethodCall(
-                                    new Node\Expr\Variable($varName),
+                                    new Node\Expr\Variable($tmpClosureVar),
                                     'bindTo',
                                     array(
                                         new Node\Expr\Variable('arg1'),
@@ -94,7 +94,7 @@ class ClosureCallVisitor extends NodeVisitorAbstract
                         'else' => new Node\Stmt\Else_(array(
                             new Node\Stmt\Return_(
                                 new Node\Expr\MethodCall(
-                                    new Node\Expr\Variable($varName),
+                                    new Node\Expr\Variable($tmpClosureVar),
                                     'call',
                                     $funcCallParams
                                 )
@@ -105,14 +105,22 @@ class ClosureCallVisitor extends NodeVisitorAbstract
             )
         ));
 
+
+        // Assigns the closure to a temporary var so we can add it to the closure 'use' list.
+        $assignNode = new Node\Expr\Assign(
+            new Node\Expr\Variable($tmpClosureVar),
+            new Node\Expr\Variable($node)
+        );
+
+
+        // Actual call_user_func that calls our new defined closure
         $args = $node->args;
         array_unshift($args, new Node\Arg($closureNode));
-
         $callUserFuncNode = new Node\Expr\FuncCall(
             new Node\Name('call_user_func'),
             $args
         );
 
-        return $callUserFuncNode;
+        return array($assignNode, $callUserFuncNode);
     }
 }
