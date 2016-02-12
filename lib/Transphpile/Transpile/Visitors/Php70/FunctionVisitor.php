@@ -24,25 +24,26 @@ class FunctionVisitor extends NodeVisitorAbstract
     public function enterNode(Node $node)
     {
         if ($node instanceof Node\FunctionLike) {
-            NodeStateStack::getInstance()->currentFunction = $node;
+            NodeStateStack::getInstance()->push('currentFunction', $node);
         }
 
         if ($node instanceof ClassLike) {
-            NodeStateStack::getInstance()->currentClass = $node;
+            NodeStateStack::getInstance()->push('currentClass', $node);
         }
     }
 
     public function leaveNode(Node $node)
     {
         if ($node instanceof ClassLike) {
-            NodeStateStack::getInstance()->currentClass = null;
+            NodeStateStack::getInstance()->pop('currentClass');
         }
 
         if (!$node instanceof Node\FunctionLike) {
             return;
         }
 
-        $functionNode = NodeStateStack::getInstance()->currentFunction;
+        $functionNode = NodeStateStack::getInstance()->end('currentFunction');
+        NodeStateStack::getInstance()->pop('currentFunction');
 
         // Remove return type if set
         if ($node->returnType) {
@@ -73,7 +74,7 @@ class FunctionVisitor extends NodeVisitorAbstract
         }
 
         // Don't add checks when we don't enforce strict
-        if (! NodeStateStack::getInstance()->isStrict) {
+        if (! NodeStateStack::getInstance()->get('isStrict')) {
             return null;
         }
 
@@ -83,7 +84,7 @@ class FunctionVisitor extends NodeVisitorAbstract
         }
 
         // No typehinting on interfaces
-        if (NodeStateStack::getInstance()->currentClass instanceof Interface_) {
+        if (NodeStateStack::getInstance()->end('currentClass') instanceof Interface_) {
             return null;
         }
 

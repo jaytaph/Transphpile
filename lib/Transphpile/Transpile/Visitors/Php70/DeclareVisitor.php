@@ -25,7 +25,7 @@ class DeclareVisitor extends NodeVisitorAbstract
             }
 
             // Set global strict value so others know what to do with scalar typehinting and return types.
-            NodeStateStack::getInstance()->isStrict = ($declare->value->value == 1);
+            NodeStateStack::getInstance()->set('isStrict', $declare->value->value == 1);
 
             // Remove the strict_type declare
             return NodeTraverser::REMOVE_NODE;

@@ -39,7 +39,7 @@ class AnonymousClassVisitor extends NodeVisitorAbstract
         $classNode->name = $anonClass;
 
         // Store the class so we add them later on to the code
-        NodeStateStack::getInstance()->anonClasses = $classNode;
+        NodeStateStack::getInstance()->push('anonClasses', $classNode);
 
         // Generate new code that instantiate our new class
         $newNode = new Node\Expr\New_(
@@ -60,13 +60,13 @@ class AnonymousClassVisitor extends NodeVisitorAbstract
     public function afterTraverse(array $nodes)
     {
         // Nothing to do when there are no anonymous classes
-        if (count(NodeStateStack::getInstance()->anonClasses) == 0) {
+        if (NodeStateStack::getInstance()->count('anonClasses') == 0) {
             return $nodes;
         }
 
         // We must transpile anonymous classes first, as we haven't done this yet
         $traverser = Transpile::getTraverser();
-        $anonClassStmts = $traverser->traverse(NodeStateStack::getInstance()->anonClasses);
+        $anonClassStmts = $traverser->traverse(NodeStateStack::getInstance()->get('anonClasses'));
 
         // Find hook point for anonymous classes, which must be after declare, namespaces and use-statements, and can
         // before anything else. This might cause issues when anonymous classes implement interfaces that are defined

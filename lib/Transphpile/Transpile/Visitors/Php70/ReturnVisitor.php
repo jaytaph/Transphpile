@@ -19,7 +19,7 @@ class ReturnVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        $functionNode = NodeStateStack::getInstance()->currentFunction;
+        $functionNode = NodeStateStack::getInstance()->end('currentFunction');
 
         // No functionNode means we are doing a return in the global scope
         if (! $functionNode) {
@@ -32,7 +32,7 @@ class ReturnVisitor extends NodeVisitorAbstract
         }
 
         // Not strict, so no need to check return type;
-        if (! NodeStateStack::getInstance()->isStrict) {
+        if (! NodeStateStack::getInstance()->get('isStrict')) {
             return null;
         }
 
@@ -50,7 +50,7 @@ class ReturnVisitor extends NodeVisitorAbstract
 
         // @TODO: It might be easier to read when we generate ALL code directly from Nodes instead of generating it
 
-        if (in_array($functionNode->returnType, array('string', 'bool', 'int', 'float'))) {
+        if (in_array($functionNode->returnType, array('string', 'bool', 'int', 'float', 'array'))) {
             // Scalars are treated a bit different
             $code = sprintf(
                 '<?php '."\n".

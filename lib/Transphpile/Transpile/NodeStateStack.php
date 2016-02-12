@@ -46,8 +46,8 @@ class NodeStateStack {
         $vars = array(
             'anonClasses' => array(),       // Any anonymous classes that must be converted to regular classes
             'isStrict' => false,            // declare(strict_type=1) has been set
-            'currentClass' => null,         // Current class, interface or trait we are currently visiting
-            'currentFunction' => null,      // Current function, method or closure we are currently visiting
+            'currentClass' => array(),      // Stack with current class, interface or trait we are currently visiting
+            'currentFunction' => array(),   // Stack with current function, method or closure we are currently visiting
         );
 
         $this->vars[] = $vars;
@@ -63,22 +63,9 @@ class NodeStateStack {
 
     /**
      * @param $name
-     * @return bool
-     */
-    public function __isset($name)
-    {
-        if (count($this->vars) == 0) {
-            return false;
-        }
-
-        return isset($this->vars[count($this->vars) -1][$name]);
-    }
-
-    /**
-     * @param $name
      * @return mixed
      */
-    public function __get($name)
+    public function get($name)
     {
         if (count($this->vars) == 0) {
             return null;
@@ -91,19 +78,67 @@ class NodeStateStack {
      * @param $name
      * @param $value
      */
-    public function __set($name, $value)
+    public function set($name, $value)
     {
         if (count($this->vars) == 0) {
             return null;
         }
 
-        if (is_array($this->vars[count($this->vars) -1][$name])) {
-            $this->vars[count($this->vars) -1][$name][] = $value;
-        } else {
-            $this->vars[count($this->vars) -1][$name] = $value;
-        }
+        $this->vars[count($this->vars) -1][$name] = $value;
     }
 
+    public function push($name, $value)
+    {
+        if (count($this->vars) == 0) {
+            return null;
+        }
+
+        if (! is_array($this->vars[count($this->vars) -1][$name])) {
+            throw new \InvalidArgumentException('argument must be an array');
+        }
+
+        array_push($this->vars[count($this->vars) -1][$name], $value);
+    }
+
+    public function pop($name)
+    {
+        if (count($this->vars) == 0) {
+            return null;
+        }
+
+        if (! is_array($this->vars[count($this->vars) -1][$name])) {
+            throw new \InvalidArgumentException('argument must be an array');
+        }
+
+        return array_pop($this->vars[count($this->vars) -1][$name]);
+    }
+
+    public function count($name)
+    {
+        if (count($this->vars) == 0) {
+            return null;
+        }
+
+        if (! is_array($this->vars[count($this->vars) -1][$name])) {
+            throw new \InvalidArgumentException('argument must be an array');
+        }
+
+        return count($this->vars[count($this->vars) -1][$name]);
+    }
+
+    public function end($name)
+    {
+        if (count($this->vars) == 0) {
+            return null;
+        }
+
+        if (! is_array($this->vars[count($this->vars) -1][$name])) {
+            throw new \InvalidArgumentException('argument must be an array');
+        }
+
+        $a = $this->vars[count($this->vars) -1][$name];
+        return $a[count($a)-1];
+    }
 
 
 }
