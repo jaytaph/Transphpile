@@ -80,7 +80,7 @@ class FunctionVisitor extends NodeVisitorAbstract
         // Add code for checking scalar types
         foreach ($params as $param) {
             $code = sprintf(
-                    '<?php if (! is_%s($%s)) { throw new \InvalidArgumentException("Argument $%s passed to %s() must be of the type %s, ".get_class($%s)." given"); }',
+                    '<?php if (! is_%s($%s)) { throw new \InvalidArgumentException("Argument \$%s passed to %s() must be of the type %s, ".get_class($%s)." given"); }',
                     $param['type'], $param['arg'], $param['arg'], $param['func'], $param['type'], $param['arg']
             );
 
