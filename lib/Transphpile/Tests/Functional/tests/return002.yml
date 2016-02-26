@@ -3,7 +3,7 @@ name: return object typehints
 stdout: |
   foo5\d{4}
 stderr: |
-  Uncaught exception 'InvalidArgumentException' with message 'Argument returned must be of the type DateTime, string given'
+  Argument returned must be of the type \\DateTime, string given
 code: |
   declare(strict_types=1);
 

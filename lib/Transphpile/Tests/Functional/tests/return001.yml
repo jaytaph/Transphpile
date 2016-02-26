@@ -3,7 +3,7 @@ name: return scalar typehints
 stdout: |
   foo5
 stderr: |
-  Uncaught exception 'InvalidArgumentException' with message 'Argument returned must be of the type int, string given'
+  Argument returned must be of the type int, string given
 code: |
   declare(strict_types=1);
 

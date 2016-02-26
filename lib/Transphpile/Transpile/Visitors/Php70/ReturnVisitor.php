@@ -50,9 +50,15 @@ class ReturnVisitor extends NodeVisitorAbstract
 
         // Generate remainder code
 
+        $returnType = (string)$functionNode->returnType;
+        // Manually add starting namespace separator for FQCN: https://github.com/nikic/PHP-Parser/issues/249
+        if ($functionNode->returnType instanceof Node\Name\FullyQualified && $returnType[0] != '\\') {
+            $returnType = '\\' . $returnType;
+        }
+
         // @TODO: It might be easier to read when we generate ALL code directly from Nodes instead of generating it
 
-        if (in_array($functionNode->returnType, array('string', 'bool', 'int', 'float', 'array'))) {
+        if (in_array($returnType, array('string', 'bool', 'int', 'float', 'array'))) {
             // Scalars are treated a bit different
             $code = sprintf(
                 '<?php '."\n".
@@ -60,7 +66,7 @@ class ReturnVisitor extends NodeVisitorAbstract
                 '    throw new \InvalidArgumentException("Argument returned must be of the type %s, ".gettype($'.$retVar.')." given"); '."\n".
                 '  } '."\n".
                 '  return $'.$retVar.'; ',
-                $functionNode->returnType, $functionNode->returnType
+                $returnType, $returnType
             );
         } else {
             // Otherwise use is_a for check against classes
@@ -70,7 +76,7 @@ class ReturnVisitor extends NodeVisitorAbstract
                 '    throw new \InvalidArgumentException("Argument returned must be of the type %s, ".(gettype($'.$retVar.') == "object" ? get_class($'.$retVar.') : gettype($'.$retVar.'))." given"); '."\n".
                 '  } '."\n".
                 '  return $'.$retVar.'; ',
-                $functionNode->returnType, $functionNode->returnType
+                $returnType, $returnType
             );
         }
 
