@@ -5,6 +5,7 @@ namespace Transphpile\Transpile\Visitors\Php70;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
+use Transphpile\Exception\TranspileException;
 use Transphpile\Transpile\NodeStateStack;
 
 class GeneratorReturnVisitor extends NodeVisitorAbstract

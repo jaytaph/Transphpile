@@ -1,0 +1,12 @@
+---
+name: Test if array defines work
+stdout: |
+  int\(5\)
+
+  OK
+code: |
+  define('FOOBAR', 5);
+
+  var_dump(FOOBAR);
+
+  echo "\nOK";

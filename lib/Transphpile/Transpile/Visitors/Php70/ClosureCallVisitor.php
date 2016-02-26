@@ -11,12 +11,14 @@ use PhpParser\NodeVisitorAbstract;
  * if bindTo needs to be called, or the regular call() is needed.
  *
  *
- *  $closure->call($three, 4);
+ *      echo $closure->call($three, 4);
  *
  * into:
  *
- *          $tmp_var = $closure;
- *          echo call_user_func(function($arg1, $arg2) use ($tmp_var) {
+ *      echo
+ *          call_user_func(function($arg1, $arg2) use ($closure) {
+ *              $tmp_var = $closure;
+ *             call_user_func(function($arg1, $arg2) use ($tmp_var) {
  *             if ($closure instanceOf Closure) {
  *                  $tmp = $tmp_var->bindTo($arg1, get_class($arg1));
  *                  return $tmp($arg2);
@@ -30,7 +32,7 @@ class ClosureCallVisitor extends NodeVisitorAbstract
 {
     public function leaveNode(Node $node)
     {
-        // Trigger on function call "unserialize"
+        // Trigger on function call "call"
         if (!$node instanceof Node\Expr\MethodCall || $node->name != "call") {
             return null;
         }
@@ -44,9 +46,6 @@ class ClosureCallVisitor extends NodeVisitorAbstract
             $params[] = new Node\Param('arg'.($i+1));
             $funcCallParams[] = new Node\Expr\Variable('arg'.($i+1));
         }
-
-        // Remove the first argument from the argument list.
-        array_shift($funcCallParams);
 
 
         $closureNode = new Node\Expr\Closure(array(
