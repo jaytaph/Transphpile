@@ -14,8 +14,9 @@ use Transphpile\Transpile\NodeStateStack;
  * checks on parameters when in strict mode.
  */
 
-class FunctionVisitor extends NodeVisitorAbstract
+class TypehintVisitor extends NodeVisitorAbstract
 {
+
     /**
      * Store node function.
      *
@@ -24,7 +25,7 @@ class FunctionVisitor extends NodeVisitorAbstract
     public function enterNode(Node $node)
     {
         if ($node instanceof Node\FunctionLike) {
-            NodeStateStack::getInstance()->push('currentFunction', $node);
+            NodeStateStack::getInstance()->push('currentFunction', array('node' => $node, 'generator' => false));
         }
 
         if ($node instanceof ClassLike) {
@@ -43,6 +44,7 @@ class FunctionVisitor extends NodeVisitorAbstract
         }
 
         $functionNode = NodeStateStack::getInstance()->end('currentFunction');
+        $functionNode = $functionNode['node'];
         NodeStateStack::getInstance()->pop('currentFunction');
 
         // Remove return type if set
@@ -89,12 +91,12 @@ class FunctionVisitor extends NodeVisitorAbstract
         }
 
         // Add code for checking scalar types
-        foreach ($params as $param) {
+        foreach (array_reverse($params) as $param) {
             $code = sprintf(
-                '<?php if (! is_%s($%s) %s) { throw new \InvalidArgumentException("Argument \$%s passed to %s() must be of the type %s, ".get_class($%s)." given"); }',
+                '<?php if (! is_%s($%s) %s) { throw new \InvalidArgumentException("Argument \$%s passed to %s() must be of the type %s, ".(gettype($%s) == "object" ? get_class($%s) : gettype($%s))." given"); }',
                 $param['type'], $param['arg'],
                 ($param['nullable'] ? 'and ! is_null($'.$param['arg'].')' : ""),
-                $param['arg'], $param['func'], $param['type'], $param['arg']
+                $param['arg'], $param['func'], $param['type'], $param['arg'], $param['arg'], $param['arg'], $param['arg']
             );
 
             $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);

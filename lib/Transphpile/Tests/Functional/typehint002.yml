@@ -1,0 +1,13 @@
+---
+name: test if scalar typehint works when strict types are off
+stdout: |
+  56
+code: |
+  declare(strict_types=0);
+
+  function test(int $arg) {
+    print $arg;
+  }
+
+  test(5);
+  test("6");

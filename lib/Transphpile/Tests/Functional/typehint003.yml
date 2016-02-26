@@ -1,0 +1,14 @@
+---
+name: test if scalar typehint works with null default arguments
+stdout: |
+  int\(5\)
+  NULL
+code: |
+  declare(strict_types=1);
+
+  function test(int $arg = null) {
+    var_dump($arg);
+  }
+
+  test(5);
+  test();

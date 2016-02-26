@@ -1,0 +1,24 @@
+---
+name: return scalar typehints
+stdout: |
+  foo5
+stderr: |
+  Uncaught exception 'InvalidArgumentException' with message 'Argument returned must be of the type int, string given'
+code: |
+  declare(strict_types=1);
+
+  function test1() {
+    return "foo";
+  }
+
+  function test2(): int {
+    return 5;
+  }
+
+  function test3(): int {
+    return "5";
+  }
+
+  echo test1();
+  echo test2();
+  echo test3();

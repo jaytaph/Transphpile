@@ -1,0 +1,23 @@
+---
+name: Test if declares are stripped correctly
+stdout: |
+  (:?TICK)*5(:?TICK)+6(:?TICK)*
+stderr: |
+  Uncaught exception 'InvalidArgumentException' with message 'Argument \$arg passed to test\(\) must be of the type int, string given'
+code: |
+  declare(strict_types=1);
+  declare(ticks=1);
+
+  function tick_function() {
+    print "TICK";
+  }
+
+  register_tick_function('tick_function');
+
+  function test(int $arg) {
+    print $arg;
+  }
+
+  test(5);
+  test(6);
+  test("7");

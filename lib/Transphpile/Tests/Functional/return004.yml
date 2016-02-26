@@ -1,0 +1,10 @@
+---
+name: return typehints without strict types
+stdout: |
+  OK
+code: |
+  declare(strict_types=1);
+
+  print "OK";
+  return 1;
+

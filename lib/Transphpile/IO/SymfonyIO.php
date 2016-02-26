@@ -2,12 +2,12 @@
 
 namespace Transphpile\IO;
 
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputInterface as SymfonyInputInterface;
+use Symfony\Component\Console\Output\OutputInterface as SymfonyOutputInterface;
 
 class SymfonyIO implements IOInterface
 {
-    public function __construct(InputInterface $input, OutputInterface $output)
+    public function __construct(SymfonyInputInterface $input, SymfonyOutputInterface $output)
     {
         $this->input = $input;
         $this->output = $output;
@@ -42,20 +42,20 @@ class SymfonyIO implements IOInterface
     {
         $message = '[<info>'.substr($tag, 0, 4).'</info>] '.$message;
 
-        return $this->output->writeln($message, OutputInterface::VERBOSITY_VERBOSE);
+        return $this->output->writeln($message, SymfonyOutputInterface::VERBOSITY_VERBOSE);
     }
 
     public function veryVerbose($message, $tag)
     {
         $message = '[<info>'.substr($tag, 0, 4).'</info>] '.$message;
 
-        return $this->output->writeln($message, OutputInterface::VERBOSITY_VERY_VERBOSE);
+        return $this->output->writeln($message, SymfonyOutputInterface::VERBOSITY_VERY_VERBOSE);
     }
 
     public function debug($message, $tag)
     {
         $message = '[<info>'.substr($tag, 0, 4).'</info>] '.$message;
 
-        return $this->output->writeln($message, OutputInterface::VERBOSITY_DEBUG);
+        return $this->output->writeln($message, SymfonyOutputInterface::VERBOSITY_DEBUG);
     }
 }

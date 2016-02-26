@@ -35,17 +35,6 @@ class ClosureCallVisitor extends NodeVisitorAbstract
             return null;
         }
 
-/*
-         echo call_user_func(function($a, $arg1) use ($c) {
-         Èáááááááif ($c instanceOf Closure) {
-         ÈáááááááÈááááááá$tmp = $c->bindTo($a, get_class($a));
-         ÈáááááááÈáááááááreturn $tmp($arg1);
-         Èááááááá} else {
-         ÈáááááááÈáááááááreturn $c->call($a, $arg1);
-         Èááááááá}
-         }, $four, 3);
-*/
-
         $tmpClosureVar = "closureCall_".uniqid();
 
         // Set the correct number of params, naming them arg1..argN
@@ -79,7 +68,9 @@ class ClosureCallVisitor extends NodeVisitorAbstract
                                         new Node\Expr\Variable('arg1'),
                                         new Node\Expr\FuncCall(
                                             new Node\Name('get_class'),
-                                            $funcCallParams
+                                            array(
+                                                new Node\Expr\Variable('arg1'),
+                                            )
                                         )
                                     )
                                 )

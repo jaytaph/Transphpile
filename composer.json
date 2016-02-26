@@ -23,6 +23,7 @@
         "symfony/finder": "^2.8"
     },
     "require-dev": {
+        "symfony/process": "^2.8",
         "phpunit/phpunit": "^5.1",
         "clue/phar-composer": "dev-master"
     }

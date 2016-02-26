@@ -1,0 +1,12 @@
+---
+name: scalar typehints on interface methods
+stdout: |
+  OK
+code: |
+  declare(strict_types=1);
+
+  interface foo {
+    function bar(int $a);
+  }
+
+  echo "OK";

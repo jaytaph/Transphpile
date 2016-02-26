@@ -26,6 +26,8 @@ class ReturnVisitor extends NodeVisitorAbstract
             return null;
         }
 
+        $functionNode = $functionNode['node'];
+
         // Check return type of current function
         if ($functionNode->returnType == null) {
             return null;
@@ -55,7 +57,7 @@ class ReturnVisitor extends NodeVisitorAbstract
             $code = sprintf(
                 '<?php '."\n".
                 '  if (! is_%s($'.$retVar.')) { '."\n".
-                '    throw new \InvalidArgumentException("Argument returned must be of the type %s, ".$'.$retVar.'." given"); '."\n".
+                '    throw new \InvalidArgumentException("Argument returned must be of the type %s, ".gettype($'.$retVar.')." given"); '."\n".
                 '  } '."\n".
                 '  return $'.$retVar.'; ',
                 $functionNode->returnType, $functionNode->returnType
@@ -65,7 +67,7 @@ class ReturnVisitor extends NodeVisitorAbstract
             $code = sprintf(
                 '<?php '."\n".
                 '  if (! $'.$retVar.' instanceof %s) { '."\n".
-                '    throw new \InvalidArgumentException("Argument returned must be of the type ".(%s::class).", ".get_class($'.$retVar.')." given"); '."\n".
+                '    throw new \InvalidArgumentException("Argument returned must be of the type ".(%s::class).", ".(gettype($'.$retVar.') == "object" ? get_class($'.$retVar.') : gettype($'.$retVar.'))." given"); '."\n".
                 '  } '."\n".
                 '  return $'.$retVar.'; ',
                 $functionNode->returnType, $functionNode->returnType

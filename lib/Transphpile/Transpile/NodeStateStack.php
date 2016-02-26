@@ -119,11 +119,12 @@ class NodeStateStack {
             return null;
         }
 
-        if (! is_array($this->vars[count($this->vars) -1][$name])) {
+        $a = $this->vars[count($this->vars) -1][$name];
+        if (! is_array($a)) {
             throw new \InvalidArgumentException('argument must be an array');
         }
 
-        return count($this->vars[count($this->vars) -1][$name]);
+        return count($a);
     }
 
     public function end($name)
@@ -132,12 +133,12 @@ class NodeStateStack {
             return null;
         }
 
-        if (! is_array($this->vars[count($this->vars) -1][$name])) {
+        $a = $this->vars[count($this->vars) -1][$name];
+        if (! is_array($a)) {
             throw new \InvalidArgumentException('argument must be an array');
         }
 
-        $a = $this->vars[count($this->vars) -1][$name];
-        return $a[count($a)-1];
+        return count($a) == 0 ? null : $a[count($a)-1];
     }
 
 
