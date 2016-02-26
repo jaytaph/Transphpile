@@ -1,0 +1,23 @@
+---
+name: return typehints without strict types
+stdout: |
+  foo55
+code: |
+  declare(strict_types=0);
+
+  function test1() {
+    return "foo";
+  }
+
+  function test2(): int {
+    return 5;
+  }
+
+  function test3(): int {
+    return "5";
+  }
+
+  echo test1();
+  echo test2();
+  echo test3();
+

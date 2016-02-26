@@ -2,17 +2,17 @@
 
 <phpunit backupGlobals="false"
          backupStaticAttributes="false"
-         colors="false"
+         colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="./test/bootstrap.php">
+         bootstrap="./lib/Transphpile/Tests/bootstrap.php">
     <testsuites>
         <testsuite name="PHPParser Test Suite">
-            <directory>./test/</directory>
+            <directory>./lib/Transphpile/Tests/</directory>
         </testsuite>
     </testsuites>
 

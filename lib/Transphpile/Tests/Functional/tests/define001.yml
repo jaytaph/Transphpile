@@ -1,0 +1,23 @@
+---
+name: Test if array defines work
+stdout: |
+  array\(3\) \{
+    \[0\] =>
+    string\(3\) "dog"
+    \[1\] =>
+    string\(3\) "cat"
+    \[2\] =>
+    string\(4\) "bird"
+  \}
+
+  OK
+code: |
+  define('ANIMALS', [
+      'dog',
+      'cat',
+      'bird'
+  ]);
+
+  var_dump(ANIMALS);
+
+  echo "\nOK";

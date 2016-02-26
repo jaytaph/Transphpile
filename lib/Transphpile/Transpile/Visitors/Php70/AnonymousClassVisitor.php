@@ -90,12 +90,18 @@ class AnonymousClassVisitor extends NodeVisitorAbstract
     protected function getAnonymousClassHookIndex(array $stmts)
     {
         // Find the first statement that is not a declare, namespace or use-statement
+        $ret = false;
         foreach ($stmts as $idx => $stmt) {
             if (! $stmt instanceof Declare_ &&
                 ! $stmt instanceof Use_ &&
                 ! $stmt instanceof Namespace_) {
-                return $idx;
+                $ret = $idx;
+                break;
             }
+        }
+
+        if ($ret !== false) {
+            return $ret;
         }
 
         // Seems this file only consist fo declares, use and namespaces.. That should not happen

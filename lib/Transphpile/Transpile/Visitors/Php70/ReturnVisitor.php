@@ -26,6 +26,8 @@ class ReturnVisitor extends NodeVisitorAbstract
             return null;
         }
 
+        $functionNode = $functionNode['node'];
+
         // Check return type of current function
         if ($functionNode->returnType == null) {
             return null;
@@ -48,27 +50,33 @@ class ReturnVisitor extends NodeVisitorAbstract
 
         // Generate remainder code
 
+        $returnType = (string)$functionNode->returnType;
+        // Manually add starting namespace separator for FQCN
+        if ($functionNode->returnType instanceof Node\Name\FullyQualified && $returnType[0] != '\\') {
+            $returnType = '\\' . $returnType;
+        }
+
         // @TODO: It might be easier to read when we generate ALL code directly from Nodes instead of generating it
 
-        if (in_array($functionNode->returnType, array('string', 'bool', 'int', 'float', 'array'))) {
+        if (in_array($returnType, array('string', 'bool', 'int', 'float', 'array'))) {
             // Scalars are treated a bit different
             $code = sprintf(
                 '<?php '."\n".
                 '  if (! is_%s($'.$retVar.')) { '."\n".
-                '    throw new \InvalidArgumentException("Argument returned must be of the type %s, ".$'.$retVar.'." given"); '."\n".
+                '    throw new \InvalidArgumentException("Argument returned must be of the type %s, ".gettype($'.$retVar.')." given"); '."\n".
                 '  } '."\n".
                 '  return $'.$retVar.'; ',
-                $functionNode->returnType, $functionNode->returnType
+                $returnType, $returnType
             );
         } else {
             // Otherwise use is_a for check against classes
             $code = sprintf(
                 '<?php '."\n".
                 '  if (! $'.$retVar.' instanceof %s) { '."\n".
-                '    throw new \InvalidArgumentException("Argument returned must be of the type ".(%s::class).", ".get_class($'.$retVar.')." given"); '."\n".
+                '    throw new \InvalidArgumentException("Argument returned must be of the type %s, ".(gettype($'.$retVar.') == "object" ? get_class($'.$retVar.') : gettype($'.$retVar.'))." given"); '."\n".
                 '  } '."\n".
                 '  return $'.$retVar.'; ',
-                $functionNode->returnType, $functionNode->returnType
+                $returnType, $returnType
             );
         }
 

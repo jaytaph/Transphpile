@@ -1,0 +1,13 @@
+---
+name: scalar typehints on abstract methods
+stdout: |
+  OK
+code: |
+  declare(strict_types=1);
+
+  abstract class foo {
+    abstract function bar(int $a);
+    function baz(int $a) { }
+  }
+
+  echo "OK";

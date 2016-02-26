@@ -1,0 +1,31 @@
+---
+name: return object typehints
+stdout: |
+  foo5\d{4}
+stderr: |
+  Argument returned must be of the type \\DateTime, string given
+code: |
+  declare(strict_types=1);
+
+  function test1() {
+    return "foo";
+  }
+
+  function test2(): int {
+    return 5;
+  }
+
+  function test3(): \DateTime {
+    return new \DateTime();
+  }
+
+  function test4(): \DateTime {
+    return "5";
+  }
+
+
+  echo test1();
+  echo test2();
+  $a = test3();
+  echo $a->format('Y');
+  echo test4();

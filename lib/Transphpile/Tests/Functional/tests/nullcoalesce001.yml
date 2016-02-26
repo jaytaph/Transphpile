@@ -1,0 +1,33 @@
+---
+name: Test if null coalesce works
+stdout: |
+  string\(3\) "foo"
+  string\(3\) "foo"
+  string\(3\) "bar"
+  NULL
+  string\(3\) "bar"
+  NULL
+code: |
+  var_dump( null ?? null ?? "foo");
+
+  $a = null;
+  $b = null;
+  var_dump( $a ?? $b ?? "foo" );
+
+  $a = null;
+  $b = "bar";
+  var_dump( $a ?? $b );
+
+  $a = null;
+  $b = "bar";
+  var_dump( $a ?? null );
+
+  $a = function () { return null; };
+  var_dump( $a() ?? "bar" );
+
+  $a = null;
+  $b = "bar";
+  var_dump( (isset($a) ? "foo" : null) ?? null );
+
+
+

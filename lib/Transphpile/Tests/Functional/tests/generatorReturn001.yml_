@@ -1,0 +1,17 @@
+---
+name: test generator return
+transpile_err: |
+  Cannot transpile return statements from generators
+code: |
+  $gen = (function() {
+      yield 1;
+      yield 2;
+
+      return 3;
+  })();
+
+  foreach ($gen as $val) {
+      echo $val, PHP_EOL;
+  }
+
+  echo $gen->getReturn(), PHP_EOL;

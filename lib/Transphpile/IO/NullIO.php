@@ -28,15 +28,15 @@ class NullIO implements IOInterface
     {
     }
 
-    public function verbose($message)
+    public function verbose($message, $tag)
     {
     }
 
-    public function veryVerbose($message)
+    public function veryVerbose($message, $tag)
     {
     }
 
-    public function debug($message)
+    public function debug($message, $tag)
     {
     }
 }

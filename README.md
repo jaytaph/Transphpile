@@ -1,5 +1,12 @@
-Transphpile: A PHP 7 to PHP 5.3 transpiler
+Transphpile: A PHP 7 to PHP 5.6 transpiler
 ==========================================
+
+This transpiler lets you write PHP7 code and converts it back to equal PHP5.6 so you can run in on older PHP versions. 
+The transpiler itself does not need PHP7: it can convert PHP7 code even on a PHP5.4 system, so you do not need any 
+PHP7 version.
+
+**The transpiler itself can be run on even PHP 5.4!**
+
 
 Usage
 =====

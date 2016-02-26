@@ -1,0 +1,11 @@
+---
+name: Test if closure::call works
+stdout: |
+  1
+stderr:
+  foo
+code: |
+  class A {private $x = 1;}
+
+  $getX = function() {return $this->x;};
+  echo $getX->call(new A);

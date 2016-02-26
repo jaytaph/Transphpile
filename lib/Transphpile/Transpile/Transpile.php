@@ -3,6 +3,7 @@
 namespace Transphpile\Transpile;
 
 use Symfony\Component\Console\Exception\InvalidOptionException;
+use Transphpile\Exception\ParseException;
 use Transphpile\IO\IOInterface;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
@@ -25,6 +26,10 @@ class Transpile
         // Parse into statements
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         $stmts = $parser->parse($code);
+
+        if (! $stmts) {
+            throw new ParseException(sprintf("Unable to parse PHP file '%s'\n", $srcPath));
+        }
 
         // Custom traversal does the actual transpiling
         $traverser = self::getTraverser();
