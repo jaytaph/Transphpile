@@ -1,0 +1,9 @@
+---
+name: Test if group use statements work
+stdout: |
+  OK
+code: |
+  use function foo\{bar,baz};
+  use const foo\{bar,baz};
+  
+  echo "\nOK";

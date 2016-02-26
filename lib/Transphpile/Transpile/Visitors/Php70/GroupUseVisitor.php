@@ -22,13 +22,6 @@ class GroupUseVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        // We cannot transpile function and constant imports
-        if ($node->type == Use_::TYPE_FUNCTION || $node->type == Use_::TYPE_CONSTANT) {
-            $ex = new TranspileException("Cannot transpile const or function imports");
-            $ex->setNode($node);
-            throw $ex;
-        }
-
         $useNodes = array();
         foreach ($node->uses as $use) {
             // Create complete (F)QCN
@@ -43,7 +36,7 @@ class GroupUseVisitor extends NodeVisitorAbstract
                     // Don't add an alias when the alias is the same as the name
                     ($use->alias == $use->name) ? null : $use->alias
                 )),
-                Use_::TYPE_NORMAL
+                $node->type
             );
 
             $useNodes[] = $useNode;
