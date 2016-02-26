@@ -3,7 +3,7 @@ name: Test if declares are stripped correctly
 stdout: |
   (?:TICK)*5(?:TICK)+6(?:TICK)*
 stderr: |
-  Uncaught exception 'InvalidArgumentException' with message 'Argument \$arg passed to test\(\) must be of the type int, string given'
+  Argument \$arg passed to test\(\) must be of the type int, string given
 code: |
   declare(strict_types=1);
   declare(ticks=1);

@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "508981d8fc08b5e65a20c50cdf010f87",
-    "content-hash": "6db1b87b3fea20fce01c137011acf913",
+    "hash": "73289cd1240423c94f2eefbb4e4daec8",
+    "content-hash": "025d74fa271e05ffa88158120ffb4cd6",
     "packages": [
         {
             "name": "nikic/php-parser",
-            "version": "v2.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "c542e5d86a9775abd1021618eb2430278bfc1e01"
+                "reference": "c8282e6e769b7de71a290c469fdfd1ff6a9a05a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/c542e5d86a9775abd1021618eb2430278bfc1e01",
-                "reference": "c542e5d86a9775abd1021618eb2430278bfc1e01",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/c8282e6e769b7de71a290c469fdfd1ff6a9a05a1",
+                "reference": "c8282e6e769b7de71a290c469fdfd1ff6a9a05a1",
                 "shasum": ""
             },
             "require": {
@@ -56,7 +56,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2015-12-04 15:28:43"
+            "time": "2016-02-20 20:53:08"
         },
         {
             "name": "symfony/console",
@@ -1360,16 +1360,16 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "1.3.3",
+            "version": "1.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "6e7133793a8e5a5714a551a8324337374be209df"
+                "reference": "22aa49baa48886f40b060e061a7967436f44a249"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/6e7133793a8e5a5714a551a8324337374be209df",
-                "reference": "6e7133793a8e5a5714a551a8324337374be209df",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/22aa49baa48886f40b060e061a7967436f44a249",
+                "reference": "22aa49baa48886f40b060e061a7967436f44a249",
                 "shasum": ""
             },
             "require": {
@@ -1406,7 +1406,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2015-12-02 08:37:27"
+            "time": "2016-02-26 11:40:57"
         },
         {
             "name": "sebastian/exporter",
@@ -1772,6 +1772,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "nikic/php-parser": 20,
         "clue/phar-composer": 20
     },
     "prefer-stable": false,
