@@ -51,7 +51,7 @@ class ReturnVisitor extends NodeVisitorAbstract
         // Generate remainder code
 
         $returnType = (string)$functionNode->returnType;
-        // Manually add starting namespace separator for FQCN: https://github.com/nikic/PHP-Parser/issues/249
+        // Manually add starting namespace separator for FQCN
         if ($functionNode->returnType instanceof Node\Name\FullyQualified && $returnType[0] != '\\') {
             $returnType = '\\' . $returnType;
         }
