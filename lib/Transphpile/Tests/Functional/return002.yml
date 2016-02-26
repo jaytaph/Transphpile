@@ -26,5 +26,6 @@ code: |
 
   echo test1();
   echo test2();
-  echo test3()->format('Y');
+  $a = test3();
+  echo $a->format('Y');
   echo test4();
