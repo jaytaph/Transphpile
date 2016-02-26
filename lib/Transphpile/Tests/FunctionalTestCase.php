@@ -25,11 +25,11 @@ class FunctionalTestCase extends TestCase
 
         // Load and parse yaml
         $config = Yaml::parse(file_get_contents($yamlPath));
-        if (! isset($config['stdout']) && ! isset($config['stderr'])) {
-            $this->fail('Stdout and/or stderr must be set in $yamlPath');
+        if (! isset($config['stdout'])) {
+            $this->fail('Stdout section not found in $yamlPath');
         }
         if (! isset($config['code'])) {
-            $this->fail('Node code found in $yamlPath');
+            $this->fail('Code section not found in $yamlPath');
         }
 
         // Create temp file for code to transpile
@@ -47,22 +47,19 @@ class FunctionalTestCase extends TestCase
         rewind($stream);
         $php5 = stream_get_contents($stream);
 
-
         // Run php5 code
         $process = new PhpProcess($php5);
         $process->run();
         $stdout = $process->getOutput();
         $stderr = $process->getErrorOutput();
 
-        // Check output and error output
-        if (isset($config['stdout'])) {
-            $config['stdout'] = trim($config['stdout']);
-            if (empty($stdout)) {
-                $this->fail('stdout seems empty and should be "'.$config['stdout'].'"');
-            }
-
-            $this->assertRegExp('{'.$config['stdout'].'}', $stdout, isset($config['name']) ? $config['name'] : "");
+        if (! empty($stderr) && ! isset($config['stderr'])) {
+            $this->fail('Error reported, but no stderr section found in $yamlPath');
         }
+
+        // Check output and error output
+        $config['stdout'] = trim($config['stdout']);
+        $this->assertRegExp('{'.$config['stdout'].'}', $stdout, isset($config['name']) ? $config['name'] : "");
 
         if (isset($config['stderr'])) {
             $config['stderr'] = trim($config['stderr']);
