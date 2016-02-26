@@ -24,7 +24,7 @@
     },
     "require-dev": {
         "symfony/process": "^2.8",
-        "phpunit/phpunit": "^5.1",
+        "phpunit/phpunit": "^4.8",
         "clue/phar-composer": "dev-master"
     }
 }
