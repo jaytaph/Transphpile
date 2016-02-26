@@ -67,7 +67,7 @@ class ReturnVisitor extends NodeVisitorAbstract
             $code = sprintf(
                 '<?php '."\n".
                 '  if (! $'.$retVar.' instanceof %s) { '."\n".
-                '    throw new \InvalidArgumentException("Argument returned must be of the type ".(%s::class).", ".(gettype($'.$retVar.') == "object" ? get_class($'.$retVar.') : gettype($'.$retVar.'))." given"); '."\n".
+                '    throw new \InvalidArgumentException("Argument returned must be of the type %s, ".(gettype($'.$retVar.') == "object" ? get_class($'.$retVar.') : gettype($'.$retVar.'))." given"); '."\n".
                 '  } '."\n".
                 '  return $'.$retVar.'; ',
                 $functionNode->returnType, $functionNode->returnType
