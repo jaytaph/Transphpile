@@ -19,12 +19,12 @@
     "bin": [ "bin/transphpile" ],
     "require": {
         "nikic/php-parser": "dev-master#c8282e6e769b7de71a290c469fdfd1ff6a9a05a1",
-        "symfony/console": "^2.8",
-        "symfony/finder": "^2.8",
-        "symfony/yaml": "^2.8"
+        "symfony/console": "^2.8|^3.0",
+        "symfony/finder": "^2.8|^3.0",
+        "symfony/yaml": "^2.8|^3.0"
     },
     "require-dev": {
-        "symfony/process": "^2.8",
+        "symfony/process": "^2.8|^3.0",
         "phpunit/phpunit": "^4.8",
         "clue/phar-composer": "dev-master"
     }
