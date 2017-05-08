@@ -59,7 +59,10 @@ Theoretically, you should be able to transpile all your PHP7 code and run it aga
 Todo
 ====
 
-A lot: getting things up and running more decent. Fix up code, make sure that transpiled code works properly (even for instance when we use transpiled code in for instance `isset()` of comparissions and whatnot. Fix up the unit-tests, make them more fool-proof.
+A lot: 
+* Get things up and running more decent. 
+* Fix up code, make sure that transpiled code works properly (even for instance when we use transpiled code in for instance `isset()` of comparisions and other features).
+* Fix up the unit-tests, make them more fool-proof.
 
 The transpiler however is not able to transpile the following due to the fact that it's very hard to emulate the functionality even in a PHP5.6 environment:
 
