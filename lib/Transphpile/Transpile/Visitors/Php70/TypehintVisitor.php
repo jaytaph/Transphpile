@@ -55,8 +55,15 @@ class TypehintVisitor extends NodeVisitorAbstract
         // Remove scalar types and store for later
         $params = array();
         foreach ($node->params as $param) {
-            if (in_array($param->type, array('string', 'int', 'float', 'bool'))) {
-                $canBeNull = false;
+            $canBeNull = false;
+            // It can be null if it's a nullable type (string $x), or if it has a default of null (string $x = null)
+            $paramType = $param->type;
+            if ($paramType instanceof Node\NullableType) {
+                $paramType = $paramType->type;
+                $canBeNull = true;
+            }
+            // TODO: PHP 7.1 added iterable as a param type and return type, use is_array($x) || ($x instanceof Traversable) for that check?
+            if (in_array(strtolower((string)$paramType), array('string', 'int', 'float', 'bool'), true)) {
                 if ($param->default != null) {
                     if ($param->default instanceof Node\Expr\ConstFetch) {
                         if ($param->default->name->parts[0] == "null") {
@@ -66,12 +73,20 @@ class TypehintVisitor extends NodeVisitorAbstract
                 }
 
                 $params[] = array(
-                    'type' => $param->type,
+                    'type' => $paramType,
                     'arg' => $param->name,
                     'func' => $node->name,
                     'nullable' => $canBeNull,
                 );
                 $param->type = null;
+            } else if ($canBeNull && $param->default === null) {
+                // Workaround for nullable types.
+                // This may cause issues if subclasses are nullable and base classes aren't,
+                // but that shouldn't be frequent.
+                $param->default = new Node\Expr\ConstFetch(
+                    new Node\Name(['null'])
+                );
+                $param->type = $paramType;
             }
         }
 
