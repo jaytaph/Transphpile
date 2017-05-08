@@ -9,7 +9,7 @@ set_error_handler(function ($severity, $message, $file, $line) {
     }
 });
 
-if (file_exists($path = __DIR__.'/../vendor/autoload.php')) {
+if (file_exists($path = __DIR__.'/../vendor/autoload.php') || file_exists($path = __DIR__.'/../../../../vendor/autoload.php')) {
     require_once $path;
 } else {
     fwrite(STDERR, "Error: please run 'composer install' to install dependencies\n");
