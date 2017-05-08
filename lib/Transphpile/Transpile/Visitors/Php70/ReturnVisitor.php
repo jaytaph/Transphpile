@@ -40,7 +40,7 @@ class ReturnVisitor extends NodeVisitorAbstract
 
         // Define uniq retvar for returning, most likely not needed but done to make sure we don't
         // hit any existing variables or multiple return vars
-        $retVar = 'ret'.uniqid(true);
+        $retVar = 'ret'.uniqid();
 
         // Generate code for "$retVar = <originalExpression>"
         $retNode = new Node\Expr\Assign(
@@ -50,7 +50,18 @@ class ReturnVisitor extends NodeVisitorAbstract
 
         // Generate remainder code
 
-        $returnType = (string)$functionNode->returnType;
+        $isNullable = false;
+        $returnTypeNode = $functionNode->returnType;
+        if ($returnTypeNode instanceof Node\NullableType) {
+            $returnTypeNode = $returnTypeNode->type;
+            $isNullable = true;
+        }
+        if ($isNullable) {
+            $nullCheck = '$'.$retVar.' !== null && ';
+        } else {
+            $nullCheck = '';
+        }
+        $returnType = (string)$returnTypeNode;
         // Manually add starting namespace separator for FQCN
         if ($functionNode->returnType instanceof Node\Name\FullyQualified && $returnType[0] != '\\') {
             $returnType = '\\' . $returnType;
@@ -58,11 +69,11 @@ class ReturnVisitor extends NodeVisitorAbstract
 
         // @TODO: It might be easier to read when we generate ALL code directly from Nodes instead of generating it
 
-        if (in_array($returnType, array('string', 'bool', 'int', 'float', 'array'))) {
+        if (in_array(strtolower($returnType), array('string', 'bool', 'int', 'float', 'array'), true)) {
             // Scalars are treated a bit different
             $code = sprintf(
                 '<?php '."\n".
-                '  if (! is_%s($'.$retVar.')) { '."\n".
+                '  if ('.$nullCheck.'! is_%s($'.$retVar.')) { '."\n".
                 '    throw new \InvalidArgumentException("Argument returned must be of the type %s, ".gettype($'.$retVar.')." given"); '."\n".
                 '  } '."\n".
                 '  return $'.$retVar.'; ',
@@ -72,7 +83,7 @@ class ReturnVisitor extends NodeVisitorAbstract
             // Otherwise use is_a for check against classes
             $code = sprintf(
                 '<?php '."\n".
-                '  if (! $'.$retVar.' instanceof %s) { '."\n".
+                '  if ('.$nullCheck.' ! $'.$retVar.' instanceof %s) { '."\n".
                 '    throw new \InvalidArgumentException("Argument returned must be of the type %s, ".(gettype($'.$retVar.') == "object" ? get_class($'.$retVar.') : gettype($'.$retVar.'))." given"); '."\n".
                 '  } '."\n".
                 '  return $'.$retVar.'; ',
