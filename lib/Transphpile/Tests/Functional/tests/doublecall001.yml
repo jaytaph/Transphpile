@@ -1,0 +1,30 @@
+---
+name: Calling where function used is the result of a call
+stdout: |
+  "v"42\["a","b","c"\]
+code: |
+  declare(strict_types=1);
+
+  function test1() {
+    return function($arg) { return json_encode($arg);};
+  }
+
+  class C{
+    function test2() {
+      return function($arg, $arg2) { return $arg + $arg2; };
+    }
+  }
+
+  class D{
+      public $arg;
+      public function __construct($arg) {
+          $this->arg = $arg;
+      }
+      public function __invoke($arg2, $arg3) {
+          return json_encode([$this->arg, $arg2, $arg3]);
+      }
+  }
+
+  echo test1()("v");
+  echo C::test2()(20, 22);
+  echo (new D('a'))('b','c');
