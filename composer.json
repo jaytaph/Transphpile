@@ -19,7 +19,7 @@
     "bin": [ "bin/transphpile" ],
     "require": {
         "php": "^5.4|^7.0",
-        "nikic/php-parser": "dev-master#c8282e6e769b7de71a290c469fdfd1ff6a9a05a1",
+        "nikic/php-parser": "~3.0.5",
         "symfony/console": "^2.8|^3.0",
         "symfony/finder": "^2.8|^3.0",
         "symfony/yaml": "^2.8|^3.0"
