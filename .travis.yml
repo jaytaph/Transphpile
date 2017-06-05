@@ -1,6 +1,8 @@
 language: php
 
 sudo: false
+# Fixes "HHVM is no longer supported on Ubuntu Precise. Please consider using Trusty with `dist: trusty`."
+dist: trusty
 
 php:
   - 5.4
