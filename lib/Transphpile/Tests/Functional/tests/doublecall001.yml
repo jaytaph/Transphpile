@@ -10,7 +10,7 @@ code: |
   }
 
   class C{
-    function test2() {
+    static function test2() {
       return function($arg, $arg2) { return $arg + $arg2; };
     }
   }

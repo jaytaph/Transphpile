@@ -55,7 +55,7 @@ class FunctionalTestCase extends TestCase
 
         // If we don't define stderr, there should not be any stderr output from our php5 file
         if (! empty($stderr) && ! isset($config['stderr'])) {
-            $this->fail('Error reported, but no stderr section found in $yamlPath');
+            $this->fail("Error reported, but no stderr section found in $yamlPath\nError: $stderr\n");
         }
 
         // Check output
@@ -63,11 +63,12 @@ class FunctionalTestCase extends TestCase
         $this->assertRegExp('{'.$config['stdout'].'}', $stdout, isset($config['name']) ? $config['name'] : "");
 
         // Check stderr if any
+        // (When running this test, make sure that the ini setting display_errors=stderr is set)
         if (isset($config['stderr'])) {
             $config['stderr'] = trim($config['stderr']);
 
             if (empty($stderr)) {
-                $this->fail('stderr seems empty but should contain an error');
+                $this->fail("stderr seems empty but should contain an error\nconfig:\n$config\n\nstdout:\n$stdout\n");
             }
             $this->assertRegExp('{'.$config['stderr'].'}', $stderr, isset($config['name']) ? $config['name'] : "");
         }
