@@ -1,6 +1,8 @@
 language: php
 
 sudo: false
+# Fixes "HHVM is no longer supported on Ubuntu Precise. Please consider using Trusty with `dist: trusty`."
+dist: trusty
 
 php:
   - 5.4
@@ -16,4 +18,4 @@ matrix:
     - php: nightly
   fast_finish: true
 
-script: vendor/bin/phpunit
+script: PHPRC=$PWD/lib/Transphpile/Tests/phprc vendor/bin/phpunit
