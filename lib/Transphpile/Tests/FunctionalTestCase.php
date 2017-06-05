@@ -68,7 +68,7 @@ class FunctionalTestCase extends TestCase
             $config['stderr'] = trim($config['stderr']);
 
             if (empty($stderr)) {
-                $this->fail("stderr seems empty but should contain an error\nconfig:\n$config\n\nstdout:\n$stdout\n");
+                $this->fail(sprintf("stderr seems empty but should contain an error\nconfig:\n%s\n\nstdout:\n%s\n", var_export($config, true), $stdout));
             }
             $this->assertRegExp('{'.$config['stderr'].'}', $stderr, isset($config['name']) ? $config['name'] : "");
         }
