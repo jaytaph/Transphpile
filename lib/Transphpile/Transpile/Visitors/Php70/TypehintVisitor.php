@@ -77,6 +77,7 @@ class TypehintVisitor extends NodeVisitorAbstract
                     'arg' => $param->name,
                     'func' => $node->name,
                     'nullable' => $canBeNull,
+                    'variadic' => $param->variadic,
                 );
                 $param->type = null;
             } else if ($canBeNull && $param->default === null) {
@@ -107,12 +108,14 @@ class TypehintVisitor extends NodeVisitorAbstract
 
         // Add code for checking scalar types
         foreach (array_reverse($params) as $param) {
-            $code = sprintf(
-                '<?php if (! is_%s($%s) %s) { throw new \InvalidArgumentException("Argument \$%s passed to %s() must be of the type %s, ".(gettype($%s) == "object" ? get_class($%s) : gettype($%s))." given"); }',
-                $param['type'], $param['arg'],
-                ($param['nullable'] ? 'and ! is_null($'.$param['arg'].')' : ""),
-                $param['arg'], $param['func'], $param['type'], $param['arg'], $param['arg'], $param['arg'], $param['arg']
-            );
+            $isVariadic = $param['variadic'];
+            if ($isVariadic) {
+                $argInner = '__transpiler_iter_' . $param['arg'];
+                $innerCode = self::generateParamValidationSnippet($param['type'], $argInner, $param['nullable'], $param['func'], $param['arg']);
+                $code = sprintf('<?php foreach ($%s as $%s) { %s }', $param['arg'], $argInner, $innerCode);
+            } else {
+                $code = '<?php ' . self::generateParamValidationSnippet($param['type'], $param['arg'], $param['nullable'], $param['func'], $param['arg']);
+            }
 
             $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
             $stmts = $parser->parse($code);
@@ -123,5 +126,22 @@ class TypehintVisitor extends NodeVisitorAbstract
                 $node->stmts = array_merge($stmts, $node->stmts);
             }
         }
+    }
+
+    /**
+     * @param string $type (scalar type hint not found in php 5)
+     * @param string $argInner (arg name in the generated code)
+     * @param bool $nullable
+     * @param string $func
+     * @param string $arg (arg name for the error message)
+     * @return string
+     */
+    private static function generateParamValidationSnippet($type, $argInner, $nullable, $func, $arg) {
+        return sprintf(
+            'if (! is_%s($%s) %s) { throw new \InvalidArgumentException("Argument \$%s passed to %s() must be of the type %s, ".(gettype($%s) == "object" ? get_class($%s) : gettype($%s))." given"); }',
+            $type, $argInner,
+            ($nullable ? 'and ! is_null($'.$arg.')' : ""),
+            $arg, $func, $type, $argInner, $argInner, $argInner, $argInner
+        );
     }
 }

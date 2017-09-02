@@ -1,0 +1,19 @@
+---
+name: test if scalar typehint works
+stdout: |
+  523
+stderr: |
+  Argument \$arg passed to test\(\) must be of the type int, string given
+code: |
+  declare(strict_types=1);
+
+  function test(int ...$arg) {
+      foreach ($arg as $v) {
+          print $v;
+      }
+  }
+
+  test(5, 2);
+  test();
+  test(3);
+  test(1, "6");
