@@ -80,7 +80,7 @@ class ReturnVisitor extends NodeVisitorAbstract
                 $returnType, $returnType
             );
         } else {
-            // Otherwise use is_a for check against classes
+            // Otherwise use instanceof for check against classes
             $code = sprintf(
                 '<?php '."\n".
                 '  if ('.$nullCheck.' ! $'.$retVar.' instanceof %s) { '."\n".
